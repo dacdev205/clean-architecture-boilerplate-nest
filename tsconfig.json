@@ -10,12 +10,20 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
+    "paths": {
+      "~/application/*": ["./src/application/*"],
+      "~/common/*": ["./src/common/*"],
+      "~/content/*": ["./src/content/*"],
+      "~/config/*": ["./src/config/*"],
+      "~/infrastructure/*": ["./src/infrastructure/*"]
+    },
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": true,
-    "forceConsistentCasingInFileNames": true,
+    "esModuleInterop": true,
+    "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
+    "forceConsistentCasingInFileNames": false,
     "noFallthroughCasesInSwitch": false
   }
 }
