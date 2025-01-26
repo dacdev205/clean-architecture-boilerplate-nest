@@ -8,7 +8,7 @@ import { ProductModule } from './application/module/products.module';
 import { UsersModule } from './application/module/users.module';
 import { EmailModule } from './infrastructure/email/email.module';
 import { QueuesModule } from './infrastructure/queues/queues.module';
-
+// test
 @Module({
   imports: [
     ConfigModule.forRoot({
