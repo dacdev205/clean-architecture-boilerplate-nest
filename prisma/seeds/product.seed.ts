@@ -197,7 +197,5 @@ export class ProductSeedData {
       await this.createBrand(brandData);
       await this.createProduct(cleanedProducts);
     }
-
-    console.log('Dữ liệu đã được thêm vào cơ sở dữ liệu.');
   }
 }
