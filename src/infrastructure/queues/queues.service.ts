@@ -1,12 +1,12 @@
 import { InjectQueue } from '@nestjs/bullmq';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
 import { JOB_NAMES, QUEUE_NAMES } from 'src/common/constants/queueConstants';
-import { ActivationJobData } from 'src/common/interface/activation-job-data.interface';
-import { ResetPassJobData } from 'src/common/interface/reset-pass-job-data.interface';
+import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
+import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 
 @Injectable()
-export class QeueuesService {
+export class QueuesService {
   constructor(
     @InjectQueue(QUEUE_NAMES.AUTH_QUEUE) private readonly authQueue: Queue,
   ) {}

@@ -1,23 +1,31 @@
 import * as nodemailer from 'nodemailer';
-import { ActivationJobData } from 'src/common/interface/activation-job-data.interface';
-import { EmailJobData } from 'src/common/interface/email-job-data.interface';
-import { ResetPassJobData } from 'src/common/interface/reset-pass-job-data.interface';
+import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
+import { EmailJobData } from '~/common/interfaces/email-job-data.interface';
+import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 import { contentEmail } from 'src/content/email';
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { HandlebarsService } from './../handlebar/handlebar.service';
+import { EmailModuleOption } from '~/common/interfaces/email.interfaces';
 
 @Injectable()
 export class EmailService {
   private transporter: nodemailer.Transporter;
-  constructor(private readonly handlebarsService: HandlebarsService) {
-    if (!this.transporter) {
-      this.transporter = nodemailer.createTransport({
-        service: process.env.TRANSPORT_SERVICE,
-        auth: {
-          user: process.env.MAIL_USER,
-          pass: process.env.MAIL_PASSWORD,
-        },
-      });
+  constructor(
+    @Inject('EMAIL_OPTIONS') private readonly options: EmailModuleOption,
+    private readonly handlebarsService: HandlebarsService,
+  ) {
+    if (this.options.service === 'smtp') {
+      if (!this.transporter) {
+        this.transporter = nodemailer.createTransport({
+          host: this.options.smtpHost,
+          port: parseInt(this.options.smtpPort),
+          service: this.options.service,
+          auth: {
+            user: this.options.user,
+            pass: this.options.pass,
+          },
+        });
+      }
     }
   }
 
@@ -32,12 +40,16 @@ export class EmailService {
       subject: contentEmail.sendResetPassCode.subject,
       html: templateContent,
     };
-    await this.transporter.sendMail({
-      from: `"Support" <${process.env.MAIL_FROM}>`,
-      to: emailJobData.to,
-      subject: emailJobData.subject,
-      html: emailJobData.html,
-    });
+    if (this.options.service === 'smtp') {
+      await this.transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: emailJobData.to,
+        subject: emailJobData.subject,
+        html: emailJobData.html,
+      });
+    } else if (this.options.service === 'sendgrid') {
+      console.log('send mail with sendgrid option');
+    }
   }
   async sendActivationEmail(
     activationJobData: ActivationJobData,
@@ -53,7 +65,7 @@ export class EmailService {
       html: templateContent,
     };
     await this.transporter.sendMail({
-      from: `"Support" <${process.env.MAIL_FROM}>`,
+      from: process.env.SMTP_USER,
       to: emailJobData.to,
       subject: emailJobData.subject,
       html: emailJobData.html,

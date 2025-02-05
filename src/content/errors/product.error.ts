@@ -10,10 +10,10 @@ export const PRODUCT_CREATE_FAILED = {
 
 export const PRODUCT_UPDATE_FAILED = {
   code: 'failed_to_update_product',
-  message: 'Failed to update brand',
+  message: 'Failed to update product',
 };
 
 export const PRODUCT_DELETE_FAILED = {
   code: 'failed_to_delete_product',
-  message: 'Failed to delete brand',
+  message: 'Failed to delete product',
 };

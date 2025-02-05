@@ -5,7 +5,7 @@ import { EmailModule } from 'src/infrastructure/email/email.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { QueuesModule } from 'src/infrastructure/queues/queues.module';
 import { Module } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { AuthController } from '../controllers/auth/auth.controller';
@@ -26,16 +26,14 @@ import { ValidateUserUseCase } from '../use-cases/users/validate-user.use-case';
     UsersModule,
     PrismaModule,
     PassportModule,
-    QueuesModule,
-    EmailModule,
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-
-    JwtModule.register({
+    QueuesModule.forRoot(),
+    JwtModule.registerAsync({
+      inject: [ConfigService],
       global: true,
-      secret: process.env.JWT_ACCESS_TOKEN_SECRET_KEY,
-      signOptions: { expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN },
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET_KEY'),
+        signOptions: { expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN },
+      }),
     }),
   ],
   providers: [

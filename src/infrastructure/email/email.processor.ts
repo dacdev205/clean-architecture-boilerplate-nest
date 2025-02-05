@@ -1,10 +1,9 @@
 import { Job } from 'bullmq';
 import { JOB_NAMES, QUEUE_NAMES } from 'src/common/constants/queueConstants';
-import { ActivationJobData } from 'src/common/interface/activation-job-data.interface';
-import { ResetPassJobData } from 'src/common/interface/reset-pass-job-data.interface';
+import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
+import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { EmailService } from './email.service';
-
 @Processor(QUEUE_NAMES.AUTH_QUEUE)
 export class EmailProcessor extends WorkerHost {
   constructor(private readonly emailService: EmailService) {

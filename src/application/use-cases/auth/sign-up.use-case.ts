@@ -2,12 +2,12 @@ import dayjs from 'dayjs';
 import { SignUpDto } from 'src/application/dtos/auth';
 import { HashService } from 'src/application/services/hash.service';
 import { jwtConstants } from 'src/common/constants/jwtConstants';
-import { ActivationJobData } from 'src/common/interface/activation-job-data.interface';
 import {
   EMAIL_ALREADY_EXIST,
   PHONE_ALREADY_EXIST,
 } from 'src/content/errors/user.error';
 import { v4 as uuidv4 } from 'uuid';
+import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserUseCase } from '../users/create-user.use-case';
@@ -60,7 +60,9 @@ export class SignUpUseCase {
     };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
+      }),
       refresh_token: await this.jwtService.signAsync(payload, {
         expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
       }),

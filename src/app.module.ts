@@ -1,32 +1,37 @@
-import { BullModule } from '@nestjs/bullmq';
+import dotenv from 'dotenv';
+import { AuthModule } from '~/application/module/auth.module';
+import { BrandModule } from '~/application/module/brands.module';
+import { CategoryModule } from '~/application/module/categories.module';
+import { ProductModule } from '~/application/module/products.module';
+import { UsersModule } from '~/application/module/users.module';
+import { EmailModule } from '~/infrastructure/email/email.module';
+import { QueuesModule } from '~/infrastructure/queues/queues.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { AuthModule } from './application/module/auth.module';
-import { BrandModule } from './application/module/brands.module';
-import { CategoryModule } from './application/module/categories.module';
-import { ProductModule } from './application/module/products.module';
-import { UsersModule } from './application/module/users.module';
-import { EmailModule } from './infrastructure/email/email.module';
-import { QueuesModule } from './infrastructure/queues/queues.module';
-// test
+import { getCurrentEnvFilePath, readEnvFilePath } from './config/env.config';
+
+const currentEnvFilePath = getCurrentEnvFilePath();
+readEnvFilePath(currentEnvFilePath);
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-    }),
-    BullModule.forRoot({
-      connection: {
-        host: process.env.REDIS_HOST || '127.0.0.1',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-      },
-    }),
     CategoryModule,
     BrandModule,
     ProductModule,
     UsersModule,
     AuthModule,
     QueuesModule,
-    EmailModule,
+    ConfigModule.forRoot({
+      envFilePath: currentEnvFilePath,
+      isGlobal: true,
+    }),
+    EmailModule.forRoot({
+      service: process.env.MAIL_SERVICE as 'smtp' | 'sendgrid',
+      apiKey: process.env.SENDGRID_API_KEY,
+      smtpHost: process.env.SMTP_HOST,
+      smtpPort: process.env.SMTP_PORT,
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASSWORD,
+    }),
   ],
 })
 export class AppModule {}

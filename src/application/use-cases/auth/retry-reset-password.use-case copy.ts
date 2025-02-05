@@ -1,7 +1,7 @@
 import dayjs from 'dayjs';
-import { ResetPassJobData } from 'src/common/interface/reset-pass-job-data.interface';
 import { USER_NOT_FOUND } from 'src/content/errors/user.error';
 import { v4 as uuidv4 } from 'uuid';
+import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { UpdateUserUseCase } from '../users/delete-user.use-case';
 import { FindUserByEmailUseCase } from '../users/find-user-by-email.use-case';

@@ -15,7 +15,9 @@ export class SignInUseCase {
     };
 
     return {
-      access_token: await this.jwtService.signAsync(payload),
+      access_token: await this.jwtService.signAsync(payload, {
+        expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
+      }),
       refresh_token: await this.jwtService.signAsync(payload, {
         expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
       }),
