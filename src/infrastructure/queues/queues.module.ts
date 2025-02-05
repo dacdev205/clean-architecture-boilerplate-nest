@@ -1,4 +1,4 @@
-import { QUEUE_NAMES } from 'src/common/constants/queueConstants';
+import { QUEUE_NAMES } from '~/common/constants/queue.constants';
 import { ConfigurableModuleClass } from '~/infrastructure/queues/queue.module.definition';
 import { BullModule } from '@nestjs/bullmq';
 import { DynamicModule, Module } from '@nestjs/common';
@@ -12,7 +12,6 @@ export class QueuesModule extends ConfigurableModuleClass {
       module: QueuesModule,
       imports: [
         BullModule.forRootAsync({
-          imports: [ConfigModule],
           inject: [ConfigService],
           useFactory: (configService: ConfigService) => ({
             connection: {

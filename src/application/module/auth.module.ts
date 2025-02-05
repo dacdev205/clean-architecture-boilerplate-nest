@@ -1,9 +1,9 @@
 import { LocalStrategy } from 'src/application/guards/strategies/local.strategy';
 import { UsersModule } from 'src/application/module/users.module';
-import { jwtConstants } from 'src/common/constants/jwtConstants';
 import { EmailModule } from 'src/infrastructure/email/email.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { QueuesModule } from 'src/infrastructure/queues/queues.module';
+import { jwtConstants } from '~/common/constants/jwt.constants';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';

@@ -6,6 +6,7 @@ import { contentEmail } from 'src/content/email';
 import { Inject, Injectable } from '@nestjs/common';
 import { HandlebarsService } from './../handlebar/handlebar.service';
 import { EmailModuleOption } from '~/common/interfaces/email.interfaces';
+import { MAIL_SERVICE } from '~/common/constants/email.constants';
 
 @Injectable()
 export class EmailService {
@@ -14,18 +15,16 @@ export class EmailService {
     @Inject('EMAIL_OPTIONS') private readonly options: EmailModuleOption,
     private readonly handlebarsService: HandlebarsService,
   ) {
-    if (this.options.service === 'smtp') {
-      if (!this.transporter) {
-        this.transporter = nodemailer.createTransport({
-          host: this.options.smtpHost,
-          port: parseInt(this.options.smtpPort),
-          service: this.options.service,
-          auth: {
-            user: this.options.user,
-            pass: this.options.pass,
-          },
-        });
-      }
+    if (!this.transporter) {
+      this.transporter = nodemailer.createTransport({
+        host: this.options.smtpHost,
+        port: parseInt(this.options.smtpPort),
+        service: this.options.service,
+        auth: {
+          user: this.options.user,
+          pass: this.options.pass,
+        },
+      });
     }
   }
 
@@ -40,15 +39,15 @@ export class EmailService {
       subject: contentEmail.sendResetPassCode.subject,
       html: templateContent,
     };
-    if (this.options.service === 'smtp') {
+    if (this.options.service === MAIL_SERVICE.SMTP) {
       await this.transporter.sendMail({
         from: process.env.SMTP_USER,
         to: emailJobData.to,
         subject: emailJobData.subject,
         html: emailJobData.html,
       });
-    } else if (this.options.service === 'sendgrid') {
-      console.log('send mail with sendgrid option');
+    } else if (this.options.service === MAIL_SERVICE.SEND_GRID) {
+      console.log(MAIL_SERVICE.LOG_WITH_SEND_GRID);
     }
   }
   async sendActivationEmail(
@@ -64,11 +63,15 @@ export class EmailService {
       subject: contentEmail.sendActivationCode.subject,
       html: templateContent,
     };
-    await this.transporter.sendMail({
-      from: process.env.SMTP_USER,
-      to: emailJobData.to,
-      subject: emailJobData.subject,
-      html: emailJobData.html,
-    });
+    if (this.options.service === MAIL_SERVICE.SEND_GRID) {
+      await this.transporter.sendMail({
+        from: process.env.SMTP_USER,
+        to: emailJobData.to,
+        subject: emailJobData.subject,
+        html: emailJobData.html,
+      });
+    } else if (this.options.service === MAIL_SERVICE.SEND_GRID) {
+      console.log(MAIL_SERVICE.LOG_WITH_SEND_GRID);
+    }
   }
 }

@@ -24,7 +24,7 @@ readEnvFilePath(currentEnvFilePath);
       envFilePath: currentEnvFilePath,
       isGlobal: true,
     }),
-    EmailModule.forRoot({
+    EmailModule.forFeature({
       service: process.env.MAIL_SERVICE as 'smtp' | 'sendgrid',
       apiKey: process.env.SENDGRID_API_KEY,
       smtpHost: process.env.SMTP_HOST,

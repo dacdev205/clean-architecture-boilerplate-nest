@@ -1,12 +1,12 @@
 import dayjs from 'dayjs';
 import { SignUpDto } from 'src/application/dtos/auth';
 import { HashService } from 'src/application/services/hash.service';
-import { jwtConstants } from 'src/common/constants/jwtConstants';
 import {
   EMAIL_ALREADY_EXIST,
   PHONE_ALREADY_EXIST,
 } from 'src/content/errors/user.error';
 import { v4 as uuidv4 } from 'uuid';
+import { jwtConstants } from '~/common/constants/jwt.constants';
 import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';

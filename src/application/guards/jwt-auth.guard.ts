@@ -1,4 +1,4 @@
-import { StrategyConsts } from 'src/common/constants/strategyConstants';
+import { StrategyConsts } from '~/common/constants/strategy.constants';
 import { Injectable } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 

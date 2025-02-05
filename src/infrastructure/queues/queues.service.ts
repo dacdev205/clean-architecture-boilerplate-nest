@@ -1,7 +1,7 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Inject, Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { JOB_NAMES, QUEUE_NAMES } from 'src/common/constants/queueConstants';
+import { JOB_NAMES, QUEUE_NAMES } from '~/common/constants/queue.constants';
 import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
 import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 

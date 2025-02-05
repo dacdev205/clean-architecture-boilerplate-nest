@@ -1,6 +1,6 @@
-import { jwtConstants } from 'src/common/constants/jwtConstants';
 import { AuthResponse } from '~/application/responses/auth-response';
 import { UserProfile } from '~/application/responses/user-profile-response';
+import { jwtConstants } from '~/common/constants/jwt.constants';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
