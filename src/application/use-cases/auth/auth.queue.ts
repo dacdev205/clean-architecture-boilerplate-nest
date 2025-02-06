@@ -5,15 +5,15 @@ import { ResetPassJobData } from '../../../common/interfaces/reset-pass-job-data
 
 @Injectable()
 export class AuthQueue {
-  constructor(private readonly queueService: QueuesService) {}
+  constructor(private readonly _queueService: QueuesService) {}
   async addSendActiveCodeJob(
     activationJobData: ActivationJobData,
   ): Promise<void> {
-    await this.queueService.addSendActiveCodeJob(activationJobData);
+    await this._queueService.addSendActiveCodeJob(activationJobData);
   }
   async addSendResetPassCodeJob(
     resetPassJobData: ResetPassJobData,
   ): Promise<void> {
-    await this.queueService.addSendResetPassCodeJob(resetPassJobData);
+    await this._queueService.addSendResetPassCodeJob(resetPassJobData);
   }
 }

@@ -1,11 +1,11 @@
 import { BrandRepository } from 'src/application/repositories/brands.repositories';
-import { BRAND_NOTFOUND } from 'src/content/errors/brand.error';
+import { BRAND_NOT_FOUND } from 'src/content/errors/brand.error';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Brand, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DeleteBrandUseCase {
-  constructor(private readonly brandRepository: BrandRepository) {}
+  constructor(private readonly _brandRepository: BrandRepository) {}
   async softDeleteBrandById(id: string): Promise<Brand> {
     const where: Prisma.BrandWhereUniqueInput = {
       id,
@@ -13,14 +13,14 @@ export class DeleteBrandUseCase {
         equals: null,
       },
     };
-    const brand = await this.brandRepository.findById({ where });
+    const brand = await this._brandRepository.findById({ where });
     if (!brand) {
-      throw new NotFoundException(BRAND_NOTFOUND);
+      throw new NotFoundException(BRAND_NOT_FOUND);
     }
     const data: Prisma.BrandUpdateInput = {
       deletedAt: new Date(),
     };
-    return this.brandRepository.update({
+    return this._brandRepository.update({
       where,
       data,
     });

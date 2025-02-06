@@ -14,46 +14,46 @@ import {
   CreateBrandSchema,
   UpdateBrandDto,
 } from 'src/application/dtos/brands';
-import { CreateBrandUseCase } from 'src/application/use-cases/brands/create-brand.use-case';
-import { FindAllBrandsUseCase } from '~/application/use-cases/brands/find-all-brands.use-case';
-import { FindBrandByIdUseCase } from 'src/application/use-cases/brands/find-brand-by-id.use-case';
-import { UpdateBrandUseCase } from 'src/application/use-cases/brands/update-brand.use-case';
-import { DeleteBrandUseCase } from 'src/application/use-cases/brands/delete-brand-by-id.use-case';
+import { CreateBrandUseCase } from '~/application/use-cases/brands/create-brand.usecase';
+import { FindAllBrandsUseCase } from '~/application/use-cases/brands/find-all-brands.usecase';
+import { FindBrandByIdUseCase } from '~/application/use-cases/brands/find-brand-by-id.usecase';
+import { UpdateBrandUseCase } from '~/application/use-cases/brands/update-brand.usecase';
+import { DeleteBrandUseCase } from '~/application/use-cases/brands/delete-brand-by-id.usecase';
 
 @Controller('brand')
 export class BrandController {
   constructor(
-    private readonly createBrandUseCase: CreateBrandUseCase,
-    private readonly findAllBrandsUseCase: FindAllBrandsUseCase,
-    private readonly findBrandByIdUseCase: FindBrandByIdUseCase,
-    private readonly updateBrandUseCase: UpdateBrandUseCase,
-    private readonly deleteBrandUseCase: DeleteBrandUseCase,
+    private readonly _createBrandUseCase: CreateBrandUseCase,
+    private readonly _findAllBrandsUseCase: FindAllBrandsUseCase,
+    private readonly _findBrandByIdUseCase: FindBrandByIdUseCase,
+    private readonly _updateBrandUseCase: UpdateBrandUseCase,
+    private readonly _deleteBrandUseCase: DeleteBrandUseCase,
   ) {}
   @Post()
   @UsePipes(new ZodValidationPipe(CreateBrandSchema))
   createBrand(@Body() createBrandDto: CreateBrandDto): Promise<Brand> {
-    return this.createBrandUseCase.create(createBrandDto);
+    return this._createBrandUseCase.create(createBrandDto);
   }
 
   @Get()
   findAllBrand(): Promise<Brand[]> {
-    return this.findAllBrandsUseCase.findAll();
+    return this._findAllBrandsUseCase.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Brand> {
-    return this.findBrandByIdUseCase.findBrandById(id);
+    return this._findBrandByIdUseCase.findBrandById(id);
   }
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateBrandDto: UpdateBrandDto,
   ): Promise<Brand> {
-    return this.updateBrandUseCase.update(id, updateBrandDto);
+    return this._updateBrandUseCase.update(id, updateBrandDto);
   }
   // test
   @Patch('/:id/delete')
   softDeleteBrandById(@Param('id') id: string): Promise<Brand> {
-    return this.deleteBrandUseCase.softDeleteBrandById(id);
+    return this._deleteBrandUseCase.softDeleteBrandById(id);
   }
 }

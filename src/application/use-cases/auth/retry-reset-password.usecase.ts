@@ -10,12 +10,12 @@ import { AuthQueue } from './auth.queue';
 @Injectable()
 export class RetryResetPassword {
   constructor(
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
-    private readonly authQueue: AuthQueue,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
+    private readonly _authQueue: AuthQueue,
   ) {}
   async retryResetPassword(email: string): Promise<any> {
-    const user = await this.findUserByEmailUseCase.findOneByEmail(email);
+    const user = await this._findUserByEmailUseCase.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
@@ -23,11 +23,11 @@ export class RetryResetPassword {
       codeId: uuidv4(),
       codeExpiredAt: dayjs().add(1, 'days').toDate(),
     };
-    await this.updateUserUseCase.updateUser(user.id, data);
+    await this._updateUserUseCase.updateUser(user.id, data);
     const resetJobdata: ResetPassJobData = {
       to: email,
       resetCode: data.codeId,
     };
-    await this.authQueue.addSendResetPassCodeJob(resetJobdata);
+    await this._authQueue.addSendResetPassCodeJob(resetJobdata);
   }
 }

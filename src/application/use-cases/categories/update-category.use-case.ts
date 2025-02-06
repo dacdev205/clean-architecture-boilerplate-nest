@@ -1,7 +1,7 @@
 import { UpdateCategoryDto } from 'src/application/dtos/categories';
-import { CategoryRepository } from 'src/application/repositories/categories.repositories';
+import { CategoriesRepository } from 'src/application/repositories/categories.repositories';
 import {
-  CATEGORY_NOTFOUND,
+  CATEGORY_NOT_FOUND,
   CATEGORY_UPDATE_FAILED,
 } from 'src/content/errors/Category.error';
 import {
@@ -13,7 +13,7 @@ import { Category, Prisma } from '@prisma/client';
 
 @Injectable()
 export class UpdateCategoryUseCase {
-  constructor(private readonly CategoryRepository: CategoryRepository) {}
+  constructor(private readonly _categoryRepository: CategoriesRepository) {}
   async update(id: string, requestBody: UpdateCategoryDto): Promise<Category> {
     const where: Prisma.CategoryWhereUniqueInput = {
       id,
@@ -21,11 +21,11 @@ export class UpdateCategoryUseCase {
         equals: null,
       },
     };
-    const Category = await this.CategoryRepository.findById({ where });
+    const Category = await this._categoryRepository.findById({ where });
     if (!Category) {
-      throw new NotFoundException(CATEGORY_NOTFOUND);
+      throw new NotFoundException(CATEGORY_NOT_FOUND);
     }
-    const Category_updated = await this.CategoryRepository.update({
+    const Category_updated = await this._categoryRepository.update({
       where,
       data: requestBody,
     });

@@ -25,10 +25,10 @@ import { FindAllUsersUseCase } from '~/application/use-cases/users/find-all-user
 @Controller('users')
 export class UsersController {
   constructor(
-    private readonly createUserUseCase: CreateUserUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
-    private readonly deleteUserUseCase: DeleteUserUseCase,
-    private readonly findAllUsersUseCase: FindAllUsersUseCase,
+    private readonly _createUserUseCase: CreateUserUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
+    private readonly _deleteUserUseCase: DeleteUserUseCase,
+    private readonly _findAllUsersUseCase: FindAllUsersUseCase,
   ) {}
 
   @Post('')
@@ -37,7 +37,7 @@ export class UsersController {
     @Body()
     createUserDto: SignUpDto,
   ): Promise<User> {
-    const user = await this.createUserUseCase.create(createUserDto);
+    const user = await this._createUserUseCase.create(createUserDto);
     return user;
   }
   @Get('profile')
@@ -47,14 +47,14 @@ export class UsersController {
   }
   @Delete(':id')
   async delete(@Param('id') id: string): Promise<User> {
-    const user = await this.deleteUserUseCase.delete_user(id);
+    const user = await this._deleteUserUseCase.deleteUser(id);
     return user;
   }
   @Get()
   @UseGuards(new RolesGuard([Role.ADMIN]))
   @UseGuards(JwtAuthGuard)
   async findAll(): Promise<User[]> {
-    const users = await this.findAllUsersUseCase.findAll();
+    const users = await this._findAllUsersUseCase.findAll();
     return users as User[];
   }
   @Put(':id')
@@ -62,6 +62,6 @@ export class UsersController {
     if (updateData.roles) {
       updateData.roles = ROLES.ADMIN;
     }
-    return await this.updateUserUseCase.updateUser(id, updateData);
+    return await this._updateUserUseCase.updateUser(id, updateData);
   }
 }

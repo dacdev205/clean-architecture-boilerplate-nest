@@ -4,8 +4,8 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class FindAllUsersUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly _userRepository: UserRepository) {}
   async findAll(): Promise<User[]> {
-    return this.userRepository.findAll();
+    return this._userRepository.findAll();
   }
 }

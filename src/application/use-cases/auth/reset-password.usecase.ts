@@ -8,18 +8,18 @@ import {
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { UpdateUserUseCase } from './../users/delete-user.use-case';
-import { FindUserByEmailUseCase } from './../users/find-user-by-email.use-case';
+import { UpdateUserUseCase } from '../users/delete-user.use-case';
+import { FindUserByEmailUseCase } from '../users/find-user-by-email.use-case';
 
 @Injectable()
 export class ResetPassword {
   constructor(
-    private readonly hashService: HashService,
-    private readonly updateUserUseCase: UpdateUserUseCase,
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _hashService: HashService,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
   ) {}
   async resetPassword(resetPassDto: ResetPassDto): Promise<any> {
-    const user = await this.findUserByEmailUseCase.findOneByEmail(
+    const user = await this._findUserByEmailUseCase.findOneByEmail(
       resetPassDto.email,
     );
     if (!user) {
@@ -33,12 +33,12 @@ export class ResetPassword {
     if (!isBeforeCheck) {
       throw new BadRequestException(CODE_HAS_EXPIRED);
     }
-    const hashed_password = await this.hashService.hashPassword(
+    const hashed_password = await this._hashService.hashPassword(
       resetPassDto.new_password,
     );
     const data = {
       password: hashed_password,
     };
-    return await this.updateUserUseCase.updateUser(user.id, data);
+    return await this._updateUserUseCase.updateUser(user.id, data);
   }
 }

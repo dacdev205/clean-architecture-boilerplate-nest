@@ -1,11 +1,11 @@
-import { CategoryRepository } from 'src/application/repositories/categories.repositories';
-import { CATEGORY_NOTFOUND } from 'src/content/errors/category.error';
+import { CategoriesRepository } from 'src/application/repositories/categories.repositories';
+import { CATEGORY_NOT_FOUND } from 'src/content/errors/category.error';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Category, Prisma } from '@prisma/client';
 
 @Injectable()
 export class DeleteCategoryUseCase {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(private readonly _categoryRepository: CategoriesRepository) {}
   async softDeleteCategoryById(id: string): Promise<Category> {
     const where: Prisma.CategoryWhereUniqueInput = {
       id,
@@ -13,14 +13,14 @@ export class DeleteCategoryUseCase {
         equals: null,
       },
     };
-    const Category = await this.categoryRepository.findById({ where });
+    const Category = await this._categoryRepository.findById({ where });
     if (!Category) {
-      throw new NotFoundException(CATEGORY_NOTFOUND);
+      throw new NotFoundException(CATEGORY_NOT_FOUND);
     }
     const data: Prisma.CategoryUpdateInput = {
       deletedAt: new Date(),
     };
-    return this.categoryRepository.update({
+    return this._categoryRepository.update({
       where,
       data,
     });

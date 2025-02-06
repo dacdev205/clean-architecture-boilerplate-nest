@@ -23,17 +23,17 @@ import {
 } from 'src/application/dtos/products';
 import { UpdateProductUseCase } from 'src/application/use-cases/products/update-product.use-case';
 import { DeleteProductUseCase } from 'src/application/use-cases/products/delete-product-by-id.use-case';
-import { FindAllProductsUseCase } from 'src/application/use-cases/products/find-all.use-case';
+import { FindAllProductsUseCase } from '~/application/use-cases/products/find-all-products.use-case';
 import { FindProductByIdUseCase } from '~/application/use-cases/products/find-product-by-id.use-case';
 
 @Controller('products')
 export class ProductController {
   constructor(
-    private readonly createProductUseCase: CreateProductUseCase,
-    private readonly findAllProductsUseCase: FindAllProductsUseCase,
-    private readonly findProductByIdUseCase: FindProductByIdUseCase,
-    private readonly updateProductUseCase: UpdateProductUseCase,
-    private readonly deleteProductUseCase: DeleteProductUseCase,
+    private readonly _createProductUseCase: CreateProductUseCase,
+    private readonly _findAllProductsUseCase: FindAllProductsUseCase,
+    private readonly _findProductByIdUseCase: FindProductByIdUseCase,
+    private readonly _updateProductUseCase: UpdateProductUseCase,
+    private readonly _deleteProductUseCase: DeleteProductUseCase,
   ) {}
 
   @Post()
@@ -42,7 +42,7 @@ export class ProductController {
     @Body()
     createProductDto: CreateProductDto,
   ): Promise<Product> {
-    const product = await this.createProductUseCase.create(createProductDto);
+    const product = await this._createProductUseCase.create(createProductDto);
     return product;
   }
 
@@ -51,11 +51,11 @@ export class ProductController {
     @Query(new ZodValidationPipe(FilterProductSchema))
     search: FilterProductDto,
   ): Promise<Product[]> {
-    return this.findAllProductsUseCase.findAll(search);
+    return this._findAllProductsUseCase.findAll(search);
   }
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Product> {
-    return this.findProductByIdUseCase.findProductById(id);
+    return this._findProductByIdUseCase.findProductById(id);
   }
 
   @Patch(':id')
@@ -64,11 +64,11 @@ export class ProductController {
     @Param('id') id: string,
     @Body() updateProductDto: UpdateProductDto,
   ): Promise<Product> {
-    return this.updateProductUseCase.update(id, updateProductDto);
+    return this._updateProductUseCase.update(id, updateProductDto);
   }
 
   @Patch('/:id/delete')
   softDeleteProductById(@Param('id') id: string) {
-    return this.deleteProductUseCase.softDeleteProductById(id);
+    return this._deleteProductUseCase.softDeleteProductById(id);
   }
 }

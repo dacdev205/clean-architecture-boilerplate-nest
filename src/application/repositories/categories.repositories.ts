@@ -5,19 +5,19 @@ import { Injectable } from '@nestjs/common';
 import { Category, Prisma } from '@prisma/client';
 
 @Injectable()
-export class CategoryRepository {
-  constructor(private readonly prisma: PrismaService) {}
+export class CategoriesRepository {
+  constructor(private readonly _prisma: PrismaService) {}
   async create(requestBody: Prisma.CategoryCreateArgs): Promise<Category> {
-    return this.prisma.category.create(requestBody);
+    return this._prisma.category.create(requestBody);
   }
   async findAll(): Promise<Category[]> {
-    return this.prisma.category.findMany();
+    return this._prisma.category.findMany();
   }
 
   async findById(arg: Prisma.CategoryFindUniqueArgs): Promise<Category | null> {
-    return this.prisma.category.findUnique(arg);
+    return this._prisma.category.findUnique(arg);
   }
   async update(arg: Prisma.CategoryUpdateArgs): Promise<Category> {
-    return this.prisma.category.update(arg);
+    return this._prisma.category.update(arg);
   }
 }

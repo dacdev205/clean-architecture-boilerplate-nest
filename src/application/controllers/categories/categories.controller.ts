@@ -9,8 +9,8 @@ import {
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.schema';
 import { Category } from '@prisma/client';
-import { CreateCategoryUseCase } from 'src/application/use-cases/categories/create-category.use-case';
-import { DeleteCategoryUseCase } from 'src/application/use-cases/categories/delete-category-by-id.use-case';
+import { CreateCategoryUseCase } from '~/application/use-cases/categories/create-category.usecase';
+import { DeleteCategoryUseCase } from '~/application/use-cases/categories/delete-category-by-id.usecase';
 import {
   CreateCategoryDto,
   CreateCategorySchema,
@@ -18,44 +18,44 @@ import {
 } from 'src/application/dtos/categories';
 import { UpdateCategoryUseCase } from 'src/application/use-cases/categories/update-category.use-case';
 import { FindCategoryByIdUseCase } from 'src/application/use-cases/categories/find-category-by-id.use-case';
-import { FindAllCategoriesUseCase } from '~/application/use-cases/categories/find-all.use-case';
+import { FindAllCategoriesUseCase } from '~/application/use-cases/categories/find-all-categories.usecase';
 
-@Controller('Category')
-export class CategoryController {
+@Controller('categories')
+export class CategoriesController {
   constructor(
-    private readonly createCategoryUseCase: CreateCategoryUseCase,
-    private readonly findAllCategoriesUseCase: FindAllCategoriesUseCase,
-    private readonly findCategoryByIdUseCase: FindCategoryByIdUseCase,
-    private readonly updateCategoryUseCase: UpdateCategoryUseCase,
-    private readonly deleteCategoryUseCase: DeleteCategoryUseCase,
+    private readonly _createCategoryUseCase: CreateCategoryUseCase,
+    private readonly _findAllCategoriesUseCase: FindAllCategoriesUseCase,
+    private readonly _findCategoryByIdUseCase: FindCategoryByIdUseCase,
+    private readonly _updateCategoryUseCase: UpdateCategoryUseCase,
+    private readonly _deleteCategoryUseCase: DeleteCategoryUseCase,
   ) {}
   @Post()
   @UsePipes(new ZodValidationPipe(CreateCategorySchema))
   createCategory(
     @Body() createCategoryDto: CreateCategoryDto,
   ): Promise<Category> {
-    return this.createCategoryUseCase.create(createCategoryDto);
+    return this._createCategoryUseCase.create(createCategoryDto);
   }
 
   @Get()
   findAllCategory(): Promise<Category[]> {
-    return this.findAllCategoriesUseCase.findAll();
+    return this._findAllCategoriesUseCase.findAll();
   }
 
   @Get(':id')
   findOne(@Param('id') id: string): Promise<Category> {
-    return this.findCategoryByIdUseCase.findCategoryById(id);
+    return this._findCategoryByIdUseCase.findCategoryById(id);
   }
   @Patch(':id')
   update(
     @Param('id') id: string,
     @Body() updateCategoryDto: UpdateCategoryDto,
   ): Promise<Category> {
-    return this.updateCategoryUseCase.update(id, updateCategoryDto);
+    return this._updateCategoryUseCase.update(id, updateCategoryDto);
   }
 
   @Patch('/:id/delete')
   softDeleteCategoryById(@Param('id') id: string): Promise<Category> {
-    return this.deleteCategoryUseCase.softDeleteCategoryById(id);
+    return this._deleteCategoryUseCase.softDeleteCategoryById(id);
   }
 }

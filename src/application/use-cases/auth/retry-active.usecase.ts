@@ -15,12 +15,12 @@ import { AuthQueue } from './auth.queue';
 @Injectable()
 export class RetryActiveUseCase {
   constructor(
-    private readonly authQueue: AuthQueue,
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly _authQueue: AuthQueue,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
   ) {}
   async retryActive(email: string): Promise<any> {
-    const user = await this.findUserByEmailUseCase.findOneByEmail(email);
+    const user = await this._findUserByEmailUseCase.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
@@ -31,11 +31,11 @@ export class RetryActiveUseCase {
       codeId: uuidv4(),
       codeExpiredAt: dayjs().add(1, 'days').toDate(),
     };
-    await this.updateUserUseCase.updateUser(user.id, data);
+    await this._updateUserUseCase.updateUser(user.id, data);
     const activationJobData: ActivationJobData = {
       to: email,
       activationCode: data.codeId,
     };
-    await this.authQueue.addSendActiveCodeJob(activationJobData);
+    await this._authQueue.addSendActiveCodeJob(activationJobData);
   }
 }

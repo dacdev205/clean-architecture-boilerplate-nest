@@ -24,10 +24,10 @@ interface Raw_Data {
 }
 
 export class ProductSeedData {
-  private prismaClient: PrismaClient;
+  private _prismaClient: PrismaClient;
 
   constructor() {
-    this.prismaClient = new PrismaClient();
+    this._prismaClient = new PrismaClient();
   }
 
   readFilesFromDir(dirName: string): Array<string> {
@@ -58,7 +58,7 @@ export class ProductSeedData {
     const categories: Array<Category> = [];
     for (let i = 0; i < categoriesData.length; i++) {
       const categoryData = categoriesData[i];
-      const existingCategory = await this.prismaClient.category.findFirst({
+      const existingCategory = await this._prismaClient.category.findFirst({
         where: { name: categoryData.name },
       });
 
@@ -67,7 +67,7 @@ export class ProductSeedData {
         continue;
       }
 
-      const category = await this.prismaClient.category.create({
+      const category = await this._prismaClient.category.create({
         data: categoryData,
       });
       categories.push(category);
@@ -82,14 +82,14 @@ export class ProductSeedData {
     const brands: Array<Brand> = [];
     for (let i = 0; i < brandsData.length; i++) {
       const brandData = brandsData[i];
-      const existingBrand = await this.prismaClient.brand.findFirst({
+      const existingBrand = await this._prismaClient.brand.findFirst({
         where: { name: brandData.name },
       });
       if (existingBrand) {
         console.log('Skipping existing Brand: ', brandData.name);
         continue;
       }
-      await this.prismaClient.brand.create({ data: brandData });
+      await this._prismaClient.brand.create({ data: brandData });
     }
     return brands;
   }
@@ -99,19 +99,19 @@ export class ProductSeedData {
   ): Promise<void> {
     for (let i = 0; i < productsData.length; i++) {
       const productData = productsData[i];
-      const existingProduct = await this.prismaClient.product.findFirst({
+      const existingProduct = await this._prismaClient.product.findFirst({
         where: { title: productData.title },
       });
       if (existingProduct) {
         console.log('Skipping existing Product: ', productData.title);
         continue;
       }
-      await this.prismaClient.product.create({ data: productData });
+      await this._prismaClient.product.create({ data: productData });
     }
   }
 
   async main() {
-    const dirName = 'product_raw_Data';
+    const dirName = 'product-raw-data';
     const seedFileNames = this.readFilesFromDir(dirName);
 
     if (seedFileNames.length === 0) {
@@ -154,7 +154,7 @@ export class ProductSeedData {
           continue;
         }
 
-        const existingProduct = await this.prismaClient.product.findFirst({
+        const existingProduct = await this._prismaClient.product.findFirst({
           where: { sku: product.sku, urlSource: product.url_source },
         });
         if (existingProduct) {

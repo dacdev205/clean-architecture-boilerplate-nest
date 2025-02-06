@@ -1,11 +1,11 @@
-import { CategoryRepository } from 'src/application/repositories/categories.repositories';
-import { CATEGORY_NOTFOUND } from 'src/content/errors/category.error';
+import { CategoriesRepository } from 'src/application/repositories/categories.repositories';
+import { CATEGORY_NOT_FOUND } from 'src/content/errors/category.error';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 
 @Injectable()
 export class FindCategoryByIdUseCase {
-  constructor(private readonly categoryRepository: CategoryRepository) {}
+  constructor(private readonly _categoryRepository: CategoriesRepository) {}
   async findCategoryById(id: string): Promise<any> {
     const where: Prisma.CategoryWhereUniqueInput = {
       id,
@@ -13,9 +13,9 @@ export class FindCategoryByIdUseCase {
         equals: null,
       },
     };
-    const category = await this.categoryRepository.findById({ where });
+    const category = await this._categoryRepository.findById({ where });
     if (!category) {
-      throw new NotFoundException(CATEGORY_NOTFOUND);
+      throw new NotFoundException(CATEGORY_NOT_FOUND);
     }
     return category;
   }

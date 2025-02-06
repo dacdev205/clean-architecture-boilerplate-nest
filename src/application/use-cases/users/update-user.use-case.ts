@@ -5,9 +5,9 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class DeleteUserUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
-  async delete_user(id: string): Promise<User | null> {
-    const user = await this.userRepository.delete({ where: { id } });
+  constructor(private readonly _userRepository: UserRepository) {}
+  async deleteUser(id: string): Promise<User | null> {
+    const user = await this._userRepository.delete({ where: { id } });
     if (!user) {
       throw new BadRequestException(USER_NOT_FOUND);
     }

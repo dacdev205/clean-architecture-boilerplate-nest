@@ -6,7 +6,7 @@ import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class SignInUseCase {
-  constructor(private jwtService: JwtService) {}
+  constructor(private readonly _jwtService: JwtService) {}
   async signIn(user: UserProfile): Promise<AuthResponse> {
     const payload = {
       sub: user.id,
@@ -15,10 +15,10 @@ export class SignInUseCase {
     };
 
     return {
-      access_token: await this.jwtService.signAsync(payload, {
+      accessToken: await this._jwtService.signAsync(payload, {
         expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
       }),
-      refresh_token: await this.jwtService.signAsync(payload, {
+      refreshToken: await this._jwtService.signAsync(payload, {
         expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
       }),
     };

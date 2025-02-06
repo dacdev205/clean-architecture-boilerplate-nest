@@ -6,7 +6,7 @@ import { PassportStrategy } from '@nestjs/passport';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(private readonly findUserByIdUseCase: FindUserByIdUseCase) {
+  constructor(private readonly _findUserByIdUseCase: FindUserByIdUseCase) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
@@ -17,7 +17,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   async validate(payload: any): Promise<UserProfile> {
     const id = payload.sub;
 
-    const user = await this.findUserByIdUseCase.findOneById(id);
+    const user = await this._findUserByIdUseCase.findOneById(id);
     if (!user) {
       throw new UnauthorizedException();
     }

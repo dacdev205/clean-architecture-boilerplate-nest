@@ -1,6 +1,6 @@
-import { ChangePasswordUseCase } from './../../use-cases/auth/change-password.use-case';
-import { SignUpUseCase } from 'src/application/use-cases/auth/sign-up.use-case';
-import { Body, Controller, Post, Put, UseGuards } from '@nestjs/common';
+import { ChangePasswordUseCase } from '../../use-cases/auth/change-password.usecase';
+import { SignUpUseCase } from '~/application/use-cases/auth/sign-up.usecase';
+import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
 import {
   ChangePasswordDto,
   ResetPassDto,
@@ -10,59 +10,58 @@ import {
 import { AuthResponse } from '~/application/responses/auth-response';
 import { UserProfile } from '~/application/responses/user-profile-response';
 import { CurrentUser } from 'src/common/decorators/req-user.decorators';
-import { SignInUseCase } from 'src/application/use-cases/auth/sign-in.use-case';
+import { SignInUseCase } from '~/application/use-cases/auth/sign-in.usecase';
 import { LocalAuthGuard } from 'src/application/guards/local-auth.guard';
-import { VerifyAccountUseCase } from 'src/application/use-cases/auth/verify-account.use-case';
-import { RetryActiveUseCase } from 'src/application/use-cases/auth/retry-active.use-case';
+import { VerifyAccountUseCase } from '~/application/use-cases/auth/verify-account.usecase';
+import { RetryActiveUseCase } from '~/application/use-cases/auth/retry-active.usecase';
 import { JwtAuthGuard } from 'src/application/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
-import { RetryResetPassword } from 'src/application/use-cases/auth/retry-reset-password.use-case copy';
-import { ResetPassword } from 'src/application/use-cases/auth/reset-password.use-case';
+import { RetryResetPassword } from '~/application/use-cases/auth/retry-reset-password.usecase';
+import { ResetPassword } from '~/application/use-cases/auth/reset-password.usecase';
 
 @Controller('auth')
 export class AuthController {
   constructor(
-    private readonly signUpUseCase: SignUpUseCase,
-    private readonly signInUseCase: SignInUseCase,
-    private readonly verifyAccountUseCase: VerifyAccountUseCase,
-    private readonly retryActiveUseCase: RetryActiveUseCase,
-    private readonly changePasswordUseCase: ChangePasswordUseCase,
-    private readonly retryResetPassword: RetryResetPassword,
-    private readonly resetPassword: ResetPassword,
+    private readonly _signUpUseCase: SignUpUseCase,
+    private readonly _signInUseCase: SignInUseCase,
+    private readonly _verifyAccountUseCase: VerifyAccountUseCase,
+    private readonly _retryActiveUseCase: RetryActiveUseCase,
+    private readonly _changePasswordUseCase: ChangePasswordUseCase,
+    private readonly _retryResetPassword: RetryResetPassword,
+    private readonly _resetPassword: ResetPassword,
   ) {}
   @UseGuards(LocalAuthGuard)
   @Post('login')
   async login(@CurrentUser() user: UserProfile): Promise<AuthResponse> {
-    return await this.signInUseCase.signIn(user);
+    return await this._signInUseCase.signIn(user);
   }
   @Post('register')
   async register(@Body() signUpDto: SignUpDto): Promise<AuthResponse> {
-    return await this.signUpUseCase.signUp(signUpDto);
+    return await this._signUpUseCase.signUp(signUpDto);
   }
   @Post('verify-account')
   async verifyAccount(
     @Body() verifyAccountDto: VerifyAccountDto,
   ): Promise<any> {
-    return await this.verifyAccountUseCase.verifyAccount(verifyAccountDto);
+    return await this._verifyAccountUseCase.verifyAccount(verifyAccountDto);
   }
-
   @Post('retry-active')
   async retryActiveAccount(@Body('email') email: string): Promise<any> {
-    return await this.retryActiveUseCase.retryActive(email);
+    return await this._retryActiveUseCase.retryActive(email);
   }
   @UseGuards(JwtAuthGuard)
   @Put('change-password')
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<User> {
-    return await this.changePasswordUseCase.changePassword(changePasswordDto);
+    return await this._changePasswordUseCase.changePassword(changePasswordDto);
   }
   @Post('retry-password')
   async retryResetPasswordCode(@Body('email') email: string): Promise<any> {
-    return await this.retryResetPassword.retryResetPassword(email);
+    return await this._retryResetPassword.retryResetPassword(email);
   }
   @Put('reset-password')
   async resetPasswordCode(@Body() ressetPassDto: ResetPassDto): Promise<User> {
-    return await this.resetPassword.resetPassword(ressetPassDto);
+    return await this._resetPassword.resetPassword(ressetPassDto);
   }
 }

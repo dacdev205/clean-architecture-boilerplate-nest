@@ -1,4 +1,4 @@
-export const PRODUCT_NOTFOUND = {
+export const PRODUCT_NOT_FOUND = {
   code: 'product_not_found',
   message: 'Product not found',
 };

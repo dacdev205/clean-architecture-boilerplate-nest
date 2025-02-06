@@ -17,11 +17,11 @@ import { FindUserByEmailUseCase } from '../users/find-user-by-email.use-case';
 @Injectable()
 export class VerifyAccountUseCase {
   constructor(
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
-    private readonly updateUserUseCase: UpdateUserUseCase,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
   ) {}
   async verifyAccount(verifyAccountDto: VerifyAccountDto): Promise<any> {
-    const user = await this.findUserByEmailUseCase.findOneByEmail(
+    const user = await this._findUserByEmailUseCase.findOneByEmail(
       verifyAccountDto.email,
     );
 
@@ -39,7 +39,7 @@ export class VerifyAccountUseCase {
     if (!isBeforeCheck) {
       throw new BadRequestException(CODE_HAS_EXPIRED);
     }
-    return await this.updateUserUseCase.updateUser(user.id, {
+    return await this._updateUserUseCase.updateUser(user.id, {
       isActive: true,
     });
   }

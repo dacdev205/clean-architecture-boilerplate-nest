@@ -1,3 +1,3 @@
-import { CategoryController } from './categories.controller';
+import { CategoriesController } from './categories.controller';
 
-export { CategoryController };
+export { CategoriesController };

@@ -18,17 +18,17 @@ import { AuthQueue } from './auth.queue';
 @Injectable()
 export class SignUpUseCase {
   constructor(
-    private readonly hashService: HashService,
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
-    private readonly findUserByPhoneUseCase: FindUserByPhoneUseCase,
-    private readonly createUserUseCase: CreateUserUseCase,
+    private readonly _hashService: HashService,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _findUserByPhoneUseCase: FindUserByPhoneUseCase,
+    private readonly _createUserUseCase: CreateUserUseCase,
 
-    private jwtService: JwtService,
-    private authQueue: AuthQueue,
+    private _jwtService: JwtService,
+    private _authQueue: AuthQueue,
   ) {}
   async signUp(signUpDto: SignUpDto): Promise<any> {
     const { email, phone, firstName, lastName, password } = signUpDto;
-    const hash_password = await this.hashService.hashPassword(password);
+    const hash_password = await this._hashService.hashPassword(password);
     const data = {
       email,
       phone,
@@ -39,20 +39,20 @@ export class SignUpUseCase {
       password: hash_password,
     };
     const existing_email =
-      await this.findUserByEmailUseCase.findOneByEmail(email);
+      await this._findUserByEmailUseCase.findOneByEmail(email);
     const existing_phone =
-      await this.findUserByPhoneUseCase.findOneByPhone(phone);
+      await this._findUserByPhoneUseCase.findOneByPhone(phone);
     if (existing_email) {
       throw new ConflictException(EMAIL_ALREADY_EXIST);
     } else if (existing_phone) {
       throw new ConflictException(PHONE_ALREADY_EXIST);
     }
-    const user = await this.createUserUseCase.create(data);
+    const user = await this._createUserUseCase.create(data);
     const activationJobData: ActivationJobData = {
       to: email,
       activationCode: data.codeId,
     };
-    await this.authQueue.addSendActiveCodeJob(activationJobData);
+    await this._authQueue.addSendActiveCodeJob(activationJobData);
     const payload = {
       sub: user.id,
       username: user.lastName,
@@ -60,10 +60,10 @@ export class SignUpUseCase {
     };
 
     return {
-      access_token: await this.jwtService.signAsync(payload, {
+      access_token: await this._jwtService.signAsync(payload, {
         expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
       }),
-      refresh_token: await this.jwtService.signAsync(payload, {
+      refresh_token: await this._jwtService.signAsync(payload, {
         expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
       }),
     };

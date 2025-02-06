@@ -5,7 +5,7 @@ import { ProductRepository } from '../../repositories/products.repositories';
 
 @Injectable()
 export class FindAllProductsUseCase {
-  constructor(private readonly productRepository: ProductRepository) {}
+  constructor(private readonly _productRepository: ProductRepository) {}
   async findAll(filter: FilterProductDto): Promise<any> {
     const { search, category, brand, sort } = filter;
 
@@ -51,7 +51,7 @@ export class FindAllProductsUseCase {
 
     const orderBy = sort?.map(({ field, value }) => ({ [field]: value })) || [];
 
-    const products = await this.productRepository.findAll({
+    const products = await this._productRepository.findAll({
       select: {
         id: true,
         title: true,

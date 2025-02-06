@@ -1,6 +1,6 @@
 import { CreateProductDto } from 'src/application/dtos/products/create-product.dto';
-import { BRAND_NOTFOUND } from 'src/content/errors/brand.error';
-import { CATEGORY_NOTFOUND } from 'src/content/errors/category.error';
+import { BRAND_NOT_FOUND } from 'src/content/errors/brand.error';
+import { CATEGORY_NOT_FOUND } from 'src/content/errors/category.error';
 import { PRODUCT_CREATE_FAILED } from 'src/content/errors/product.error';
 import {
   BadRequestException,
@@ -8,20 +8,20 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { Prisma, Product } from '@prisma/client';
-import { GenSlugService } from './../../services/genSlug.service';
 import { ProductRepository } from '../../repositories/products.repositories';
-import { FindBrandByIdUseCase } from '../brands/find-brand-by-id.use-case';
+import { GenSlugService } from '../../services/gen-slug.service';
+import { FindBrandByIdUseCase } from '../brands/find-brand-by-id.usecase';
 import { FindCategoryByIdUseCase } from '../categories/find-category-by-id.use-case';
 
 @Injectable()
 export class CreateProductUseCase {
   constructor(
-    private readonly productRepository: ProductRepository,
-    private readonly genSlugService: GenSlugService,
-    private readonly findCategoryByIdUseCase: FindCategoryByIdUseCase,
-    private readonly findBrandByIdUseCase: FindBrandByIdUseCase,
+    private readonly _productRepository: ProductRepository,
+    private readonly _genSlugService: GenSlugService,
+    private readonly _findCategoryByIdUseCase: FindCategoryByIdUseCase,
+    private readonly _findBrandByIdUseCase: FindBrandByIdUseCase,
   ) {}
-  async existing_sku(sku: string): Promise<boolean> {
+  async existingSku(sku: string): Promise<boolean> {
     const select: Prisma.ProductSelect = {
       id: true,
     };
@@ -31,7 +31,7 @@ export class CreateProductUseCase {
         equals: null,
       },
     };
-    const product = await this.productRepository.findFirst({
+    const product = await this._productRepository.findFirst({
       where,
       select,
     });
@@ -40,24 +40,24 @@ export class CreateProductUseCase {
     }
   }
   async create(requestBody: CreateProductDto): Promise<Product> {
-    const slug = await this.genSlugService.genSlug(requestBody.title);
-    const existing_sku = await this.existing_sku(requestBody.sku);
+    const slug = await this._genSlugService.genSlug(requestBody.title);
+    const existing_sku = await this.existingSku(requestBody.sku);
     if (existing_sku) {
       throw new BadRequestException(PRODUCT_CREATE_FAILED);
     }
 
-    const category = await this.findCategoryByIdUseCase.findCategoryById(
+    const category = await this._findCategoryByIdUseCase.findCategoryById(
       requestBody.categoryId,
     );
     if (!category) {
-      throw new NotFoundException(CATEGORY_NOTFOUND);
+      throw new NotFoundException(CATEGORY_NOT_FOUND);
     }
 
-    const brand = await this.findBrandByIdUseCase.findBrandById(
+    const brand = await this._findBrandByIdUseCase.findBrandById(
       requestBody.brandId,
     );
     if (!brand) {
-      throw new NotFoundException(BRAND_NOTFOUND);
+      throw new NotFoundException(BRAND_NOT_FOUND);
     }
     const data = {
       slug,
@@ -79,7 +79,7 @@ export class CreateProductUseCase {
       },
     };
 
-    const product = await this.productRepository.create({ data });
+    const product = await this._productRepository.create({ data });
     return product;
   }
 }

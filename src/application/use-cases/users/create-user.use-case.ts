@@ -12,9 +12,9 @@ import { FindUserByPhoneUseCase } from './find-user-by-phone.use-case';
 @Injectable()
 export class CreateUserUseCase {
   constructor(
-    private readonly userRepository: UserRepository,
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
-    private readonly findUserByPhoneUseCase: FindUserByPhoneUseCase,
+    private readonly _userRepository: UserRepository,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _findUserByPhoneUseCase: FindUserByPhoneUseCase,
   ) {}
   async create(signUpDto: SignUpDto): Promise<User> {
     const {
@@ -35,15 +35,15 @@ export class CreateUserUseCase {
       codeId,
       codeExpiredAt,
     };
-    const existing_email =
-      await this.findUserByEmailUseCase.findOneByEmail(email);
-    const existing_phone =
-      await this.findUserByPhoneUseCase.findOneByPhone(phone);
-    if (existing_email) {
+    const existingEmail =
+      await this._findUserByEmailUseCase.findOneByEmail(email);
+    const existingPhone =
+      await this._findUserByPhoneUseCase.findOneByPhone(phone);
+    if (existingEmail) {
       throw new ConflictException(EMAIL_ALREADY_EXIST);
-    } else if (existing_phone) {
+    } else if (existingPhone) {
       throw new ConflictException(PHONE_ALREADY_EXIST);
     }
-    return await this.userRepository.create({ data });
+    return await this._userRepository.create({ data });
   }
 }

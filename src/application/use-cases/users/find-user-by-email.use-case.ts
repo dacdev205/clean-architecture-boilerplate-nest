@@ -4,8 +4,8 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class FindUserByEmailUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly _userRepository: UserRepository) {}
   async findOneByEmail(email: string): Promise<User> {
-    return this.userRepository.findOne({ where: { email } });
+    return this._userRepository.findOne({ where: { email } });
   }
 }

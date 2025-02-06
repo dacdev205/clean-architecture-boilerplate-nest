@@ -6,7 +6,7 @@ import { ValidateUserUseCase } from './../../use-cases/users/validate-user.use-c
 
 @Injectable()
 export class LocalStrategy extends PassportStrategy(Strategy) {
-  constructor(private validateUserUseCase: ValidateUserUseCase) {
+  constructor(private readonly _validateUserUseCase: ValidateUserUseCase) {
     super({
       usernameField: 'email',
       passwordField: 'password',
@@ -14,7 +14,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate(email: string, password: string): Promise<UserProfile> {
-    const user = await this.validateUserUseCase.validateUser(email, password);
+    const user = await this._validateUserUseCase.validateUser(email, password);
     if (!user) {
       throw new UnauthorizedException();
     }

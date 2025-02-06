@@ -6,19 +6,19 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { EmailService } from './email.service';
 @Processor(QUEUE_NAMES.AUTH_QUEUE)
 export class EmailProcessor extends WorkerHost {
-  constructor(private readonly emailService: EmailService) {
+  constructor(private readonly _emailService: EmailService) {
     super();
   }
   async process(job: Job<any>): Promise<void> {
     switch (job.name) {
       case JOB_NAMES.SEND_ACTIVATION_MAIL: {
-        await this.emailService.sendActivationEmail(
+        await this._emailService.sendActivationEmail(
           job.data as ActivationJobData,
         );
         break;
       }
       case JOB_NAMES.SEND_RESET_PASSWORD_MAIL: {
-        await this.emailService.sendResetPassEmail(
+        await this._emailService.sendResetPassEmail(
           job.data as ResetPassJobData,
         );
         break;

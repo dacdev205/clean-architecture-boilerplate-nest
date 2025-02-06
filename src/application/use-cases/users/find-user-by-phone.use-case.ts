@@ -4,8 +4,8 @@ import { User } from '@prisma/client';
 
 @Injectable()
 export class FindUserByPhoneUseCase {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly _userRepository: UserRepository) {}
   async findOneByPhone(phone: string): Promise<User> {
-    return this.userRepository.findOne({ where: { phone } });
+    return this._userRepository.findOne({ where: { phone } });
   }
 }

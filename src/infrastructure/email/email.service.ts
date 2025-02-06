@@ -2,7 +2,7 @@ import * as nodemailer from 'nodemailer';
 import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
 import { EmailJobData } from '~/common/interfaces/email-job-data.interface';
 import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
-import { contentEmail } from 'src/content/email';
+import { EmailContent } from 'src/content/email';
 import { Inject, Injectable } from '@nestjs/common';
 import { HandlebarsService } from './../handlebar/handlebar.service';
 import { EmailModuleOption } from '~/common/interfaces/email.interfaces';
@@ -31,12 +31,12 @@ export class EmailService {
   async sendResetPassEmail(resetPassJobData: ResetPassJobData): Promise<void> {
     const { to, resetCode } = resetPassJobData;
     const templateContent = await this.handlebarsService.compileTemplate(
-      contentEmail.sendResetPassCode.content,
+      EmailContent.sendResetPassCode.content,
       { resetCode },
     );
     const emailJobData: EmailJobData = {
       to: to,
-      subject: contentEmail.sendResetPassCode.subject,
+      subject: EmailContent.sendResetPassCode.subject,
       html: templateContent,
     };
     if (this.options.service === MAIL_SERVICE.SMTP) {
@@ -55,15 +55,15 @@ export class EmailService {
   ): Promise<void> {
     const { to, activationCode } = activationJobData;
     const templateContent = await this.handlebarsService.compileTemplate(
-      contentEmail.sendActivationCode.content,
+      EmailContent.sendActivationCode.content,
       { activationCode },
     );
     const emailJobData: EmailJobData = {
       to: to,
-      subject: contentEmail.sendActivationCode.subject,
+      subject: EmailContent.sendActivationCode.subject,
       html: templateContent,
     };
-    if (this.options.service === MAIL_SERVICE.SEND_GRID) {
+    if (this.options.service === MAIL_SERVICE.SMTP) {
       await this.transporter.sendMail({
         from: process.env.SMTP_USER,
         to: emailJobData.to,

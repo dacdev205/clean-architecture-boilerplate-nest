@@ -13,15 +13,15 @@ import { FindUserByEmailUseCase } from './find-user-by-email.use-case';
 @Injectable()
 export class ValidateUserUseCase {
   constructor(
-    private readonly hashService: HashService,
-    private readonly findUserByEmailUseCase: FindUserByEmailUseCase,
+    private readonly _hashService: HashService,
+    private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
   ) {}
   async validateUser(email: string, password: string): Promise<UserProfile> {
-    const user = await this.findUserByEmailUseCase.findOneByEmail(email);
+    const user = await this._findUserByEmailUseCase.findOneByEmail(email);
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
-    const isMatching = await this.hashService.compare_password(
+    const isMatching = await this._hashService.comparePassword(
       password,
       user.password,
     );

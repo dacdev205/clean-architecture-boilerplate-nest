@@ -1,4 +1,4 @@
-export const contentEmail = {
+export const EmailContent = {
   sendActivationCode: {
     subject: `Active Your Account`,
     content: `
