@@ -18,10 +18,10 @@ import { CurrentUser } from 'src/common/decorators/req-user.decorators';
 import { RolesGuard } from '../../guards/roles.guard';
 import { Role } from 'src/common/enums/role.enum';
 import { SignUpDto, SignUpSchema } from 'src/application/dtos/auth';
-import { CreateUserUseCase } from '~/application/use-cases/users/create-user.use-case';
-import { UpdateUserUseCase } from '~/application/use-cases/users/delete-user.use-case';
-import { DeleteUserUseCase } from '~/application/use-cases/users/update-user.use-case';
-import { FindAllUsersUseCase } from '~/application/use-cases/users/find-all-user.use-case';
+import { CreateUserUseCase } from '~/application/usecases/users/create-user.use-case';
+import { UpdateUserUseCase } from '~/application/usecases/users/delete-user.use-case';
+import { DeleteUserUseCase } from '~/application/usecases/users/update-user.use-case';
+import { FindAllUsersUseCase } from '~/application/usecases/users/find-all-user.use-case';
 @Controller('users')
 export class UsersController {
   constructor(

@@ -1,10 +1,10 @@
 import slugify from 'slugify';
 
-export function create_slug(raw_name: string) {
-  const gen_slug = {
+export function createSlug(rawName: string) {
+  const genSlug = {
     replacement: '-',
     trim: true,
     lower: true,
   };
-  return slugify(raw_name, gen_slug);
+  return slugify(rawName, genSlug);
 }

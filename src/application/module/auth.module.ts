@@ -10,15 +10,15 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthController } from '../controllers/auth/auth.controller';
 import { JwtStrategy } from '../guards/strategies/jwt.strategy';
 import { HashService } from '../services/hash.service';
-import { AuthQueue } from '../use-cases/auth/auth.queue';
-import { ChangePasswordUseCase } from '../use-cases/auth/change-password.usecase';
-import { ResetPassword } from '../use-cases/auth/reset-password.usecase';
-import { RetryActiveUseCase } from '../use-cases/auth/retry-active.usecase';
-import { RetryResetPassword } from '../use-cases/auth/retry-reset-password.usecase';
-import { SignInUseCase } from '../use-cases/auth/sign-in.usecase';
-import { SignUpUseCase } from '../use-cases/auth/sign-up.usecase';
-import { VerifyAccountUseCase } from '../use-cases/auth/verify-account.usecase';
-import { ValidateUserUseCase } from '../use-cases/users/validate-user.use-case';
+import { AuthQueue } from '../usecases/auth/auth.queue';
+import { ChangePasswordUseCase } from '../usecases/auth/change-password.usecase';
+import { ResetPassword } from '../usecases/auth/reset-password.usecase';
+import { RetryActiveUseCase } from '../usecases/auth/retry-active.usecase';
+import { RetryResetPassword } from '../usecases/auth/retry-reset-password.usecase';
+import { SignInUseCase } from '../usecases/auth/sign-in.usecase';
+import { SignUpUseCase } from '../usecases/auth/sign-up.usecase';
+import { VerifyAccountUseCase } from '../usecases/auth/verify-account.usecase';
+import { ValidateUserUseCase } from '../usecases/users/validate-user.use-case';
 
 @Module({
   imports: [

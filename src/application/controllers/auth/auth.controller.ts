@@ -1,23 +1,36 @@
-import { ChangePasswordUseCase } from '../../use-cases/auth/change-password.usecase';
-import { SignUpUseCase } from '~/application/use-cases/auth/sign-up.usecase';
-import { Body, Controller, Get, Post, Put, UseGuards } from '@nestjs/common';
+import { ChangePasswordUseCase } from '../../usecases/auth/change-password.usecase';
+import { SignUpUseCase } from '~/application/usecases/auth/sign-up.usecase';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Put,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common';
 import {
   ChangePasswordDto,
+  ChangePasswordSchema,
   ResetPassDto,
+  ResetPassSchema,
   SignUpDto,
+  SignUpSchema,
   VerifyAccountDto,
+  VerifyAccountSchema,
 } from 'src/application/dtos/auth';
 import { AuthResponse } from '~/application/responses/auth-response';
 import { UserProfile } from '~/application/responses/user-profile-response';
 import { CurrentUser } from 'src/common/decorators/req-user.decorators';
-import { SignInUseCase } from '~/application/use-cases/auth/sign-in.usecase';
+import { SignInUseCase } from '~/application/usecases/auth/sign-in.usecase';
 import { LocalAuthGuard } from 'src/application/guards/local-auth.guard';
-import { VerifyAccountUseCase } from '~/application/use-cases/auth/verify-account.usecase';
-import { RetryActiveUseCase } from '~/application/use-cases/auth/retry-active.usecase';
+import { VerifyAccountUseCase } from '~/application/usecases/auth/verify-account.usecase';
+import { RetryActiveUseCase } from '~/application/usecases/auth/retry-active.usecase';
 import { JwtAuthGuard } from 'src/application/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
-import { RetryResetPassword } from '~/application/use-cases/auth/retry-reset-password.usecase';
-import { ResetPassword } from '~/application/use-cases/auth/reset-password.usecase';
+import { RetryResetPassword } from '~/application/usecases/auth/retry-reset-password.usecase';
+import { ResetPassword } from '~/application/usecases/auth/reset-password.usecase';
+import { ZodValidationPipe } from '~/common/pipes/zod-validation.schema';
 
 @Controller('auth')
 export class AuthController {
@@ -36,10 +49,12 @@ export class AuthController {
     return await this._signInUseCase.signIn(user);
   }
   @Post('register')
+  @UsePipes(new ZodValidationPipe(SignUpSchema))
   async register(@Body() signUpDto: SignUpDto): Promise<AuthResponse> {
     return await this._signUpUseCase.signUp(signUpDto);
   }
   @Post('verify-account')
+  @UsePipes(new ZodValidationPipe(VerifyAccountSchema))
   async verifyAccount(
     @Body() verifyAccountDto: VerifyAccountDto,
   ): Promise<any> {
@@ -51,6 +66,7 @@ export class AuthController {
   }
   @UseGuards(JwtAuthGuard)
   @Put('change-password')
+  @UsePipes(new ZodValidationPipe(ChangePasswordSchema))
   async changePassword(
     @Body() changePasswordDto: ChangePasswordDto,
   ): Promise<User> {
@@ -61,7 +77,8 @@ export class AuthController {
     return await this._retryResetPassword.retryResetPassword(email);
   }
   @Put('reset-password')
-  async resetPasswordCode(@Body() ressetPassDto: ResetPassDto): Promise<User> {
-    return await this._resetPassword.resetPassword(ressetPassDto);
+  @UsePipes(new ZodValidationPipe(ResetPassSchema))
+  async resetPasswordCode(@Body() resetPassDto: ResetPassDto): Promise<User> {
+    return await this._resetPassword.resetPassword(resetPassDto);
   }
 }

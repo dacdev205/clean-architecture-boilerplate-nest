@@ -2,7 +2,7 @@ import { readFileSync, readdirSync } from 'fs';
 import { resolve } from 'path';
 import { NotFoundException } from '@nestjs/common';
 import { Brand, Category, Prisma, PrismaClient } from '@prisma/client';
-import { create_slug } from '../../src/common/utils/create-slug';
+import { createSlug } from '../../src/common/utils/create-slug';
 // import { check_empty_object } from '../../src/common/utils/check-empty-object';
 import { FILE_NOT_FOUND } from '../../src/content/errors/read-file.error';
 
@@ -41,7 +41,7 @@ export class ProductSeedData {
   }
 
   generateSlug(name: string): string {
-    return create_slug(name);
+    return createSlug(name);
   }
 
   async createCategories(

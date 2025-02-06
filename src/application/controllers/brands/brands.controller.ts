@@ -13,12 +13,13 @@ import {
   CreateBrandDto,
   CreateBrandSchema,
   UpdateBrandDto,
+  UpdateBrandSchema,
 } from 'src/application/dtos/brands';
-import { CreateBrandUseCase } from '~/application/use-cases/brands/create-brand.usecase';
-import { FindAllBrandsUseCase } from '~/application/use-cases/brands/find-all-brands.usecase';
-import { FindBrandByIdUseCase } from '~/application/use-cases/brands/find-brand-by-id.usecase';
-import { UpdateBrandUseCase } from '~/application/use-cases/brands/update-brand.usecase';
-import { DeleteBrandUseCase } from '~/application/use-cases/brands/delete-brand-by-id.usecase';
+import { CreateBrandUseCase } from '~/application/usecases/brands/create-brand.usecase';
+import { FindAllBrandsUseCase } from '~/application/usecases/brands/find-all-brands.usecase';
+import { FindBrandByIdUseCase } from '~/application/usecases/brands/find-brand-by-id.usecase';
+import { UpdateBrandUseCase } from '~/application/usecases/brands/update-brand.usecase';
+import { DeleteBrandUseCase } from '~/application/usecases/brands/delete-brand-by-id.usecase';
 
 @Controller('brand')
 export class BrandController {
@@ -45,6 +46,7 @@ export class BrandController {
     return this._findBrandByIdUseCase.findBrandById(id);
   }
   @Patch(':id')
+  @UsePipes(new ZodValidationPipe(UpdateBrandSchema))
   update(
     @Param('id') id: string,
     @Body() updateBrandDto: UpdateBrandDto,
