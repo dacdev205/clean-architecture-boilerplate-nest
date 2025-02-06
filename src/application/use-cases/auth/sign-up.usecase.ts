@@ -6,7 +6,7 @@ import {
   PHONE_ALREADY_EXIST,
 } from 'src/content/errors/user.error';
 import { v4 as uuidv4 } from 'uuid';
-import { jwtConstants } from '~/common/constants/jwt.constants';
+import { JWT_TOKEN } from '~/common/constants/jwt.constants';
 import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -61,10 +61,10 @@ export class SignUpUseCase {
 
     return {
       access_token: await this._jwtService.signAsync(payload, {
-        expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
+        expiresIn: JWT_TOKEN.ACCESS_TOKEN_EXPIRES_IN,
       }),
       refresh_token: await this._jwtService.signAsync(payload, {
-        expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
+        expiresIn: JWT_TOKEN.REFRESH_TOKEN_EXPIRES_IN,
       }),
     };
   }

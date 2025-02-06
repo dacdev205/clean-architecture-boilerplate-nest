@@ -2,7 +2,7 @@ import { LocalStrategy } from 'src/application/guards/strategies/local.strategy'
 import { UsersModule } from 'src/application/module/users.module';
 import { PrismaModule } from 'src/infrastructure/prisma/prisma.module';
 import { QueuesModule } from 'src/infrastructure/queues/queues.module';
-import { jwtConstants } from '~/common/constants/jwt.constants';
+import { JWT_TOKEN } from '~/common/constants/jwt.constants';
 import { Module } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtModule } from '@nestjs/jwt';
@@ -31,7 +31,7 @@ import { ValidateUserUseCase } from '../use-cases/users/validate-user.use-case';
       global: true,
       useFactory: (configService: ConfigService) => ({
         secret: configService.get<string>('JWT_ACCESS_TOKEN_SECRET_KEY'),
-        signOptions: { expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN },
+        signOptions: { expiresIn: JWT_TOKEN.ACCESS_TOKEN_EXPIRES_IN },
       }),
     }),
   ],

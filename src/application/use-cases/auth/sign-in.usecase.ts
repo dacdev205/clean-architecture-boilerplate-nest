@@ -1,6 +1,6 @@
 import { AuthResponse } from '~/application/responses/auth-response';
 import { UserProfile } from '~/application/responses/user-profile-response';
-import { jwtConstants } from '~/common/constants/jwt.constants';
+import { JWT_TOKEN } from '~/common/constants/jwt.constants';
 import { Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 
@@ -16,10 +16,10 @@ export class SignInUseCase {
 
     return {
       accessToken: await this._jwtService.signAsync(payload, {
-        expiresIn: jwtConstants.ACCESS_TOKEN_EXPIRES_IN,
+        expiresIn: JWT_TOKEN.ACCESS_TOKEN_EXPIRES_IN,
       }),
       refreshToken: await this._jwtService.signAsync(payload, {
-        expiresIn: jwtConstants.REFRESH_TOKEN_EXPIRES_IN,
+        expiresIn: JWT_TOKEN.REFRESH_TOKEN_EXPIRES_IN,
       }),
     };
   }

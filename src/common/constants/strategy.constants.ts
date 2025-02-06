@@ -1,4 +1,4 @@
-export const StrategyConsts = {
+export const STRATEGY = {
   LOCAL: 'local',
   JWT: 'jwt',
 };
