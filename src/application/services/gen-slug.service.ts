@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class GenSlugService {
-  async create_slug(rawName: string): Promise<string> {
+  async createSlug(rawName: string): Promise<string> {
     const genSlug = {
       replacement: '-',
       trim: true,
@@ -12,7 +12,7 @@ export class GenSlugService {
     return slugify(rawName, genSlug);
   }
   async genSlug(name: string): Promise<string> {
-    const slug = this.create_slug(name);
+    const slug = this.createSlug(name);
     return slug;
   }
 }
