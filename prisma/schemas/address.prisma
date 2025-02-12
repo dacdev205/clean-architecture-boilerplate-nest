@@ -13,4 +13,5 @@ model Address {
   userId      String @map("user_id") @db.VarChar(36)
 
   user        User     @relation(fields: [userId], references: [id]) 
+  @@map("addresses")
 }

@@ -24,14 +24,14 @@ export class RetryActiveUseCase {
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);
     }
-    if (user.isActive) {
-      throw new BadRequestException(ACCOUNT_IS_ACTIVED);
-    }
+    // if (user.isActive) {
+    //   throw new BadRequestException(ACCOUNT_IS_ACTIVED);
+    // }
     const data = {
       codeId: uuidv4(),
       codeExpiredAt: dayjs().add(1, 'days').toDate(),
     };
-    await this._updateUserUseCase.updateUser(user.id, data);
+    await this._updateUserUseCase.updateUser(user.id, {});
     const activationJobData: ActivationJobData = {
       to: email,
       activationCode: data.codeId,

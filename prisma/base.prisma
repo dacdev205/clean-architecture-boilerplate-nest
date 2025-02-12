@@ -7,13 +7,13 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-generator zod_models {
-  provider                         = "zod-prisma-types"
-  output                           = "../generated" 
-  useMultipleFiles                 = true
-  writeBarrelFiles                 = false
-  createInputTypes                 = true
-  createModelTypes                 = true
-  useDefaultValidators             = true 
-  prismaClientPath                 = "@prisma/client"  
-}
+// generator zod_models {
+//   provider                         = "zod-prisma-types"
+//   output                           = "../generated" 
+//   useMultipleFiles                 = true
+//   writeBarrelFiles                 = false
+//   createInputTypes                 = true
+//   createModelTypes                 = true
+//   useDefaultValidators             = true 
+//   prismaClientPath                 = "@prisma/client"  
+// }

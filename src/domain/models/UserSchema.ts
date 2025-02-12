@@ -1,22 +1,21 @@
+import RoleSchema from 'generated/inputTypeSchemas/RoleSchema';
+import StatusSchema from 'generated/inputTypeSchemas/StatusSchema';
 import { z } from 'zod';
-import { ROLESSchema } from '../../../generated/inputTypeSchemas/ROLESSchema';
 
 /////////////////////////////////////////
 // USER SCHEMA
 /////////////////////////////////////////
 
 export const UserSchema = z.object({
-  roles: ROLESSchema,
+  role: RoleSchema,
+  status: StatusSchema,
   id: z.string().uuid(),
+  email: z.string(),
+  password: z.string(),
   firstName: z.string(),
   lastName: z.string(),
   phone: z.string(),
-  email: z.string(),
-  password: z.string(),
-  isActive: z.boolean(),
-  codeId: z.string().nullable(),
-  codeExpiredAt: z.coerce.date().nullable(),
-  deletedAt: z.coerce.date().nullable(),
+  twoFAEnabled: z.boolean(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
 });

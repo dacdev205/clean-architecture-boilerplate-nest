@@ -28,7 +28,7 @@
     "prisma:generate": "npm run prisma:merge && npm run prisma:format && npx prisma generate"
   },
   "prisma": {
-    "seed": "ts-node prisma/seeds.ts"
+    "seed": "ts-node prisma/seed.ts"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.1",

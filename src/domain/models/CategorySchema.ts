@@ -7,10 +7,9 @@ import { z } from 'zod';
 export const CategorySchema = z.object({
   id: z.string().uuid(),
   name: z.string(),
-  slug: z.string(),
-  deletedAt: z.coerce.date().nullable(),
   createdAt: z.coerce.date(),
   updatedAt: z.coerce.date(),
+  deletedAt: z.coerce.date().nullable(),
 })
 
 export type Category = z.infer<typeof CategorySchema>

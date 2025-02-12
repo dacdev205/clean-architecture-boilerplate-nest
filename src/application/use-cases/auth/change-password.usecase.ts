@@ -9,13 +9,13 @@ import {
 } from '@nestjs/common';
 import { UpdateUserUseCase } from '../users/delete-user.use-case';
 import { FindUserByEmailUseCase } from '../users/find-user-by-email.use-case';
+1;
 
 @Injectable()
 export class ChangePasswordUseCase {
   constructor(
     private readonly _findUserByEmailUseCase: FindUserByEmailUseCase,
     private readonly _updateUserUseCase: UpdateUserUseCase,
-
     private readonly _hashService: HashService,
   ) {}
   async changePassword(changePasswordDto: ChangePasswordDto): Promise<any> {

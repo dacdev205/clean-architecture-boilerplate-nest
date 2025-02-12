@@ -7,7 +7,7 @@ model Order {
   orderItems      OrderItem[]
   createdAt       DateTime @default(now()) @db.Timestamp
   updatedAt       DateTime @updatedAt @db.Timestamp
- 
+  commissionAmount Float?    @default(0) 
   userId          String    @map("user_id") @db.VarChar(36)
   affiliateId     String?   @map("affiliate_id") @db.VarChar(36)
   addressId       String    @map("address_id") @db.VarChar(36)

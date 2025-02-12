@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { Prisma } from '@prisma/client'
 
 /////////////////////////////////////////
 // PRODUCT SCHEMA
@@ -6,20 +7,14 @@ import { z } from 'zod';
 
 export const ProductSchema = z.object({
   id: z.string().uuid(),
-  title: z.string(),
-  urlSource: z.string(),
-  description: z.string(),
-  sku: z.string(),
-  price: z.number(),
-  features: z.string().array(),
-  specifications: z.string(),
-  images: z.string().array(),
-  warranty: z.string(),
-  slug: z.string(),
-  deliveryInfo: z.string().nullable(),
+  name: z.string(),
+  price: z.instanceof(Prisma.Decimal, { message: "Field 'price' must be a Decimal. Location: ['Models', 'Product']"}),
+  quantity: z.number().int(),
+  discount: z.instanceof(Prisma.Decimal, { message: "Field 'discount' must be a Decimal. Location: ['Models', 'Product']"}),
+  createdAt: z.coerce.date(),
+  updatedAt: z.coerce.date(),
   deletedAt: z.coerce.date().nullable(),
   categoryId: z.string(),
-  brandId: z.string().nullable(),
 })
 
 export type Product = z.infer<typeof ProductSchema>
