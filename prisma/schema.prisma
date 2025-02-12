@@ -9,79 +9,224 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Brand {
-  id          String    @id @default(uuid()) @db.VarChar(36)
-  name        String    @unique
-  slug        String    @db.VarChar(255)
-
-  deletedAt   DateTime? @map("deleted_at") @db.Timestamp
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-// sss
-  products  Product[]
-
-  @@map("brand")
+generator zod_models {
+  provider             = "zod-prisma-types"
+  output               = "../generated"
+  useMultipleFiles     = true
+  writeBarrelFiles     = false
+  createInputTypes     = true
+  createModelTypes     = true
+  useDefaultValidators = true
+  prismaClientPath     = "@prisma/client"
 }
 
+model Address {
+  id        String   @id @default(uuid()) @db.VarChar(36)
+  name      String   @db.VarChar(255)
+  phone     String   @db.VarChar(255)
+  city      String   @db.VarChar(255)
+  district  String   @db.VarChar(255)
+  ward      String   @db.VarChar(255)
+  street    String   @db.VarChar(255)
+  orders    Order[]
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  userId String @map("user_id") @db.VarChar(36)
+
+  user      User        @relation(fields: [userId], references: [id])
+  Affiliate Affiliate[]
+}
+
+model Affiliate {
+  id           String   @id @default(uuid())
+  businessName String   @db.VarChar(255)
+  createdAt    DateTime @default(now()) @db.Timestamp
+  updatedAt    DateTime @updatedAt @db.Timestamp
+
+  userId    String  @map("user_id") @db.VarChar(36)
+  addressId String? @map("address_id") @db.VarChar(36)
+
+  user    User     @relation(fields: [userId], references: [id])
+  address Address? @relation(fields: [addressId], references: [id])
+  Order   Order[]
+
+  @@map("affiliates")
+}
+
+model CartItem {
+  id        String   @id @default(uuid())
+  quantity  Int
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  productId String @map("product_id") @db.VarChar(36)
+  cartId    String @map("cart_id") @db.VarChar(36)
+
+  cart    Cart    @relation(fields: [cartId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("cart_items")
+}
+
+model Cart {
+  id        String     @id @default(uuid())
+  cartItems CartItem[]
+  createdAt DateTime   @default(now()) @db.Timestamp
+  updatedAt DateTime   @updatedAt @db.Timestamp
+
+  userId String @map("user_id") @db.VarChar(36)
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@map("carts")
+}
 
 model Category {
   id        String    @id @default(uuid()) @db.VarChar(36)
   name      String    @db.VarChar(255)
-  slug      String    @db.VarChar(255)
-  
-  deletedAt DateTime? @map("deleted_at") @db.Timestamp
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
-  
   products  Product[]
+  createdAt DateTime  @default(now()) @db.Timestamp
+  updatedAt DateTime  @db.Timestamp
+  deletedAt DateTime? @db.Timestamp
 
   @@map("categories")
 }
 
+model OrderItem {
+  id                 String   @id @default(uuid()) @db.VarChar(36)
+  priceAtTimeOfOrder Decimal  @db.Decimal(10, 2)
+  quantity           Int
+  createdAt          DateTime @default(now()) @db.Timestamp
+  updatedAt          DateTime @updatedAt @db.Timestamp
+
+  orderId   String @map("order_id") @db.VarChar(36)
+  productId String @map("product_id") @db.VarChar(36)
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@map("order_items")
+}
+
+model Order {
+  id            String        @id @default(uuid()) @db.VarChar(36)
+  orderCode     String        @unique @db.VarChar(36)
+  status        OrderStatus   @default(New)
+  paymentStatus PaymentStatus @default(Pending)
+  totalAmount   Decimal       @db.Decimal(10, 2)
+  orderItems    OrderItem[]
+  createdAt     DateTime      @default(now()) @db.Timestamp
+  updatedAt     DateTime      @updatedAt @db.Timestamp
+
+  userId           String  @map("user_id") @db.VarChar(36)
+  affiliateId      String? @map("affiliate_id") @db.VarChar(36)
+  addressId        String  @map("address_id") @db.VarChar(36)
+  shippingMethodId String  @map("shipping_method_id")
+  paymentMethodId  String  @map("payment_method_id") @db.VarChar(36)
+
+  user           User           @relation(fields: [userId], references: [id])
+  affiliate      Affiliate?     @relation(fields: [affiliateId], references: [id])
+  address        Address        @relation(fields: [addressId], references: [id])
+  shippingMethod ShippingMethod @relation(fields: [shippingMethodId], references: [id])
+  paymentMethod  PaymentMethod  @relation(fields: [paymentMethodId], references: [id])
+
+  @@map("orders")
+}
+
+enum OrderStatus {
+  New
+  InProcess
+  Delivered
+  Canceled
+  Refunded
+}
+
+enum PaymentStatus {
+  Pending
+  Paid
+  Failed
+  Refunded
+}
+
+model PaymentMethod {
+  id     String            @id @default(uuid()) @db.VarChar(36)
+  method PaymentMethodType
+  orders Order[]
+
+  createdAt DateTime @default(now()) @db.Timestamp
+  updatedAt DateTime @updatedAt @db.Timestamp
+
+  @@map("payment_methods")
+}
+
+enum PaymentMethodType {
+  COD
+  STRIPE
+}
 
 model Product {
-  id                  String    @id @default(uuid()) @db.VarChar(36)
-  title               String    @db.VarChar(255)
-  urlSource           String    @default("") @map("url_source") @db.VarChar(255)
-  description         String    @default("") @db.Text
-  sku                 String    @db.VarChar(255)
-  price               Float     @default(0) @db.DoublePrecision
-  features            String[]  @default([])
-  specifications      String    @db.Text
-  images              String[]
-  warranty            String    @default("") @db.Text
-  slug                String    @db.VarChar(255)
-  deliveryInfo        String?   @map("delivery_info") @db.VarChar(255)
-  deletedAt           DateTime? @map("deleted_at") @db.Timestamp
+  id         String      @id @default(uuid()) @db.VarChar(36)
+  name       String      @db.VarChar(255)
+  price      Decimal     @db.Decimal(10, 2)
+  quantity   Int
+  discount   Decimal     @db.Decimal(10, 2)
+  orderItems OrderItem[]
+  createdAt  DateTime    @default(now()) @db.Timestamp
+  updatedAt  DateTime    @updatedAt @db.Timestamp
+  deletedAt  DateTime?   @db.Timestamp
 
-  categoryId          String    @map("category_id") @db.VarChar(36)
-  brandId             String?   @map("brand_id") @db.VarChar(36)
+  categoryId String @map("category_id") @db.VarChar(36)
 
-  category            Category  @relation(fields: [categoryId], references: [id])
-  brand               Brand?    @relation(fields: [brandId], references: [id])
+  category Category   @relation(fields: [categoryId], references: [id])
+  CartItem CartItem[]
 
   @@map("products")
 }
 
-model User {
-  id          String    @id @default(uuid()) @db.VarChar(36)
-  firstName   String    @map("first_name")
-  lastName    String    @map("last_name")
-  phone       String    @unique
-  email       String    @unique
-  password    String
-  isActive    Boolean   @default(false)
-  roles        ROLES     @default(USER)  
-  codeId      String?   @map("code_id") @db.VarChar(255) 
-  codeExpiredAt DateTime? @map("code_exprired_at") @db.Timestamp
-  deletedAt   DateTime?  @map("deleted_at") @db.Timestamp
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+model ShippingMethod {
+  id        String       @id @default(uuid()) @db.VarChar(36)
+  type      ShippingType @default(METHOD_1)
+  fee       Decimal      @db.Decimal(10, 2)
+  orders    Order[]
+  createdAt DateTime     @default(now()) @db.Timestamp
+  updatedAt DateTime     @updatedAt @db.Timestamp
 
-  @@map("user")
+  @@map("shipping_methods")
 }
 
-enum ROLES {
-  ADMIN
-  USER
+enum ShippingType {
+  METHOD_1
+  METHOD_2
+}
+
+model User {
+  id           String      @id @default(uuid()) @db.VarChar(36)
+  role         Role        @default(Customer)
+  email        String      @unique
+  password     String      @db.VarChar(255)
+  firstName    String      @db.VarChar(255)
+  lastName     String      @db.VarChar(255)
+  phone        String      @db.VarChar(255)
+  twoFAEnabled Boolean     @default(false)
+  addresses    Address[]
+  affiliates   Affiliate[]
+  orders       Order[]
+  carts        Cart[]
+  status       Status      @default(Active)
+  createdAt    DateTime    @default(now()) @db.Timestamp
+  updatedAt    DateTime    @updatedAt @db.Timestamp
+
+  @@map("users")
+}
+
+enum Role {
+  Admin
+  Affiliate
+  Customer
+}
+
+enum Status {
+  Active
+  Blocked
 }

@@ -1,0 +1,13 @@
+model PaymentMethod {
+  id          String   @id @default(uuid()) @db.VarChar(36)
+  method      PaymentMethodType 
+  orders      Order[] 
+
+  createdAt   DateTime @default(now())  @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+  @@map("payment_methods")
+}
+enum PaymentMethodType {
+  COD
+  STRIPE
+}

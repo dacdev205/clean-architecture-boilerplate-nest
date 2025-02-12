@@ -1,22 +1,28 @@
 model User {
-  id          String    @id @default(uuid()) @db.VarChar(36)
-  firstName   String    @map("first_name")
-  lastName    String    @map("last_name")
-  phone       String    @unique
-  email       String    @unique
-  password    String
-  isActive    Boolean   @default(false)
-  roles        ROLES     @default(USER)  
-  codeId      String?   @map("code_id") @db.VarChar(255) 
-  codeExpiredAt DateTime? @map("code_exprired_at") @db.Timestamp
-  deletedAt   DateTime?  @map("deleted_at") @db.Timestamp
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  @@map("user")
+  id              String    @id @default(uuid())  @db.VarChar(36)
+  role            Role     @default(Customer)
+  email           String    @unique
+  password        String   @db.VarChar(255)
+  firstName       String   @db.VarChar(255)
+  lastName        String  @db.VarChar(255)
+  phone           String  @db.VarChar(255)
+  twoFAEnabled    Boolean @default(false)
+  addresses       Address[]
+  affiliates      Affiliate[]
+  orders          Order[]
+  carts           Cart[]
+  status          Status @default(Active)
+  createdAt       DateTime  @default(now()) @db.Timestamp
+  updatedAt       DateTime  @updatedAt @db.Timestamp
+  @@map("users")
 }
 
-enum ROLES {
-  ADMIN
-  USER
+enum Role {
+  Admin
+  Affiliate
+  Customer
+}
+enum Status {
+  Active
+  Blocked
 }

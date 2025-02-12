@@ -15,17 +15,15 @@ export class EmailService {
     @Inject('EMAIL_OPTIONS') private readonly options: EmailModuleOption,
     private readonly handlebarsService: HandlebarsService,
   ) {
-    if (!this.transporter) {
-      this.transporter = nodemailer.createTransport({
-        host: this.options.smtpHost,
-        port: parseInt(this.options.smtpPort),
-        service: this.options.service,
-        auth: {
-          user: this.options.user,
-          pass: this.options.pass,
-        },
-      });
-    }
+    this.transporter = nodemailer.createTransport({
+      host: this.options.smtpHost,
+      port: parseInt(this.options.smtpPort as string),
+      service: this.options.service,
+      auth: {
+        user: this.options.user,
+        pass: this.options.pass,
+      },
+    });
   }
 
   async sendResetPassEmail(resetPassJobData: ResetPassJobData): Promise<void> {

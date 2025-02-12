@@ -11,7 +11,7 @@ export class UserRepository {
   async findAll(args?: Prisma.UserFindManyArgs): Promise<User[]> {
     return this._prisma.user.findMany(args);
   }
-  async findOne(args?: Prisma.UserFindUniqueArgs): Promise<User> {
+  async findOne(args?: Prisma.UserFindUniqueArgs): Promise<User | null> {
     return this._prisma.user.findFirst(args);
   }
   async findById(arg: Prisma.UserFindUniqueArgs): Promise<User | null> {

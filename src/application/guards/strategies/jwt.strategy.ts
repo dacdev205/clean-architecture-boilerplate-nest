@@ -1,6 +1,6 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
 import { UserProfile } from '~/application/responses/user-profile-response';
-import { FindUserByIdUseCase } from '~/application/usecases/users/find-user-by-id.use-case';
+import { FindUserByIdUseCase } from '~/application/use-cases/users/find-user-by-id.use-case';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 

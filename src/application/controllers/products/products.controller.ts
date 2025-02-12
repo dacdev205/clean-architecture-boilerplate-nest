@@ -1,4 +1,4 @@
-import { CreateProductUseCase } from '../../usecases/products/create-product.use-case';
+import { CreateProductUseCase } from '../../use-cases/products/create-product.use-case';
 import {
   Body,
   Controller,
@@ -21,10 +21,10 @@ import {
   UpdateProductDto,
   UpdateProductSchema,
 } from 'src/application/dtos/products';
-import { UpdateProductUseCase } from '~/application/usecases/products/update-product.use-case';
-import { DeleteProductUseCase } from '~/application/usecases/products/delete-product-by-id.use-case';
-import { FindAllProductsUseCase } from '~/application/usecases/products/find-all-products.use-case';
-import { FindProductByIdUseCase } from '~/application/usecases/products/find-product-by-id.use-case';
+import { UpdateProductUseCase } from '~/application/use-cases/products/update-product.use-case';
+import { DeleteProductUseCase } from '~/application/use-cases/products/delete-product-by-id.use-case';
+import { FindAllProductsUseCase } from '~/application/use-cases/products/find-all-products.use-case';
+import { FindProductByIdUseCase } from '~/application/use-cases/products/find-product-by-id.use-case';
 
 @Controller('products')
 export class ProductController {

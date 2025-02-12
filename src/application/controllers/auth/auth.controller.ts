@@ -1,5 +1,5 @@
-import { ChangePasswordUseCase } from '../../usecases/auth/change-password.usecase';
-import { SignUpUseCase } from '~/application/usecases/auth/sign-up.usecase';
+import { ChangePasswordUseCase } from '../../use-cases/auth/change-password.usecase';
+import { SignUpUseCase } from '~/application/use-cases/auth/sign-up.usecase';
 import {
   Body,
   Controller,
@@ -22,14 +22,14 @@ import {
 import { AuthResponse } from '~/application/responses/auth-response';
 import { UserProfile } from '~/application/responses/user-profile-response';
 import { CurrentUser } from 'src/common/decorators/req-user.decorators';
-import { SignInUseCase } from '~/application/usecases/auth/sign-in.usecase';
+import { SignInUseCase } from '~/application/use-cases/auth/sign-in.usecase';
 import { LocalAuthGuard } from 'src/application/guards/local-auth.guard';
-import { VerifyAccountUseCase } from '~/application/usecases/auth/verify-account.usecase';
-import { RetryActiveUseCase } from '~/application/usecases/auth/retry-active.usecase';
+import { VerifyAccountUseCase } from '~/application/use-cases/auth/verify-account.usecase';
+import { RetryActiveUseCase } from '~/application/use-cases/auth/retry-active.usecase';
 import { JwtAuthGuard } from 'src/application/guards/jwt-auth.guard';
 import { User } from '@prisma/client';
-import { RetryResetPassword } from '~/application/usecases/auth/retry-reset-password.usecase';
-import { ResetPassword } from '~/application/usecases/auth/reset-password.usecase';
+import { RetryResetPassword } from '~/application/use-cases/auth/retry-reset-password.usecase';
+import { ResetPassword } from '~/application/use-cases/auth/reset-password.usecase';
 import { ZodValidationPipe } from '~/common/pipes/zod-validation.schema';
 
 @Controller('auth')

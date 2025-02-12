@@ -1,0 +1,14 @@
+model Affiliate {
+  id          String   @id @default(uuid())
+  businessName String  @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+
+  userId      String @map("user_id") @db.VarChar(36)
+  addressId   String? @map("address_id") @db.VarChar(36)
+
+  user        User     @relation(fields: [userId], references: [id])
+  address     Address? @relation(fields: [addressId], references: [id])
+
+  @@map("affiliates")
+}

@@ -155,7 +155,7 @@ export class ProductSeedData {
         }
 
         const existingProduct = await this._prismaClient.product.findFirst({
-          where: { sku: product.sku, urlSource: product.url_source },
+          where: { sku: product.sku as string },
         });
         if (existingProduct) {
           console.log(
@@ -167,21 +167,28 @@ export class ProductSeedData {
         const brandSlug = product.brand
           ? this.generateSlug(product.brand)
           : null;
-
+        // Check if the brand exists in the database
+        const existingBrand = brandSlug
+          ? await this._prismaClient.brand.findFirst({
+              where: { slug: brandSlug },
+            })
+          : null;
         cleanedProducts.push({
-          title: product.title,
-          sku: product.sku,
+          title: product.title as string,
+          sku: product.sku as string,
           price: product.price || 0,
           warranty: product.warranty,
-          urlSource: product.url_source,
+          urlSource: product.url_source as string,
           description: product.description,
           features: product.features,
           deliveryInfo: product.delivery_information,
           images: product.images || [],
           category: { connect: { id: category.id } },
-          brand: brandSlug ? { connect: { name: product.brand } } : undefined,
-          specifications: product.specifications,
-          slug: this.generateSlug(product.title),
+          brand: existingBrand
+            ? { connect: { id: existingBrand.id } }
+            : undefined,
+          specifications: product.specifications as string,
+          slug: this.generateSlug(product.title as string),
         });
 
         if (product.brand && !brandNames.has(product.brand)) {

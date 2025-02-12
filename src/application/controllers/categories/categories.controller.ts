@@ -9,17 +9,17 @@ import {
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.schema';
 import { Category } from '@prisma/client';
-import { CreateCategoryUseCase } from '~/application/usecases/categories/create-category.usecase';
-import { DeleteCategoryUseCase } from '~/application/usecases/categories/delete-category-by-id.usecase';
+import { CreateCategoryUseCase } from '~/application/use-cases/categories/create-category.usecase';
+import { DeleteCategoryUseCase } from '~/application/use-cases/categories/delete-category-by-id.usecase';
 import {
   CreateCategoryDto,
   CreateCategorySchema,
   UpdateCategoryDto,
   UpdateCategorySchema,
 } from 'src/application/dtos/categories';
-import { UpdateCategoryUseCase } from '~/application/usecases/categories/update-category.use-case';
-import { FindCategoryByIdUseCase } from '~/application/usecases/categories/find-category-by-id.use-case';
-import { FindAllCategoriesUseCase } from '~/application/usecases/categories/find-all-categories.usecase';
+import { UpdateCategoryUseCase } from '~/application/use-cases/categories/update-category.use-case';
+import { FindCategoryByIdUseCase } from '~/application/use-cases/categories/find-category-by-id.use-case';
+import { FindAllCategoriesUseCase } from '~/application/use-cases/categories/find-all-categories.usecase';
 
 @Controller('categories')
 export class CategoriesController {

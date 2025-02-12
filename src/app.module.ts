@@ -1,4 +1,3 @@
-import dotenv from 'dotenv';
 import { AuthModule } from '~/application/module/auth.module';
 import { BrandModule } from '~/application/module/brands.module';
 import { CategoryModule } from '~/application/module/categories.module';
@@ -8,10 +7,11 @@ import { EmailModule } from '~/infrastructure/email/email.module';
 import { QueuesModule } from '~/infrastructure/queues/queues.module';
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { getCurrentEnvFilePath, readEnvFilePath } from './config/env.config';
+import { EnvironmentService } from './infrastructure/environment/environment.service';
 
-const currentEnvFilePath = getCurrentEnvFilePath();
-readEnvFilePath(currentEnvFilePath);
+const currentEnvFilePath = new EnvironmentService().getCurrentEnvFilePath();
+new EnvironmentService().readEnvFilePath(currentEnvFilePath);
+
 @Module({
   imports: [
     CategoryModule,

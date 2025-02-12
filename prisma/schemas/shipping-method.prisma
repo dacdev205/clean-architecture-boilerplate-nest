@@ -1,0 +1,13 @@
+model ShippingMethod {
+  id          String   @id @default(uuid())@db.VarChar(36)
+  type        ShippingType @default(METHOD_1)
+  fee          Decimal @db.Decimal(10, 2)
+  orders      Order[]
+  createdAt   DateTime @default(now()) @db.Timestamp
+  updatedAt   DateTime @updatedAt @db.Timestamp
+  @@map("shipping_methods")
+}
+enum ShippingType {
+  METHOD_1
+  METHOD_2
+}
