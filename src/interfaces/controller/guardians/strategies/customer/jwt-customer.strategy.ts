@@ -1,9 +1,9 @@
 import { ExtractJwt, Strategy } from 'passport-jwt';
-import { UserProfileResponseDto } from 'src/interfaces/dtos/user-profile.dto';
+import { UserProfileResponseDto } from '~/application/auth/dtos/user-profile.dto';
+import { GetUserByIdUseCase } from '~/application/user/use-case/get-user-by-id.use.case';
 import { STRATEGY } from '~/common/constants/strategy.constants';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { GetUserByIdUseCase } from './../../../../../application/customer/use-case/get-user-by-id.use.case';
 
 @Injectable()
 export class JwtCustomerStrategy extends PassportStrategy(

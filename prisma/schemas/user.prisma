@@ -13,7 +13,7 @@ model User {
   affiliates      Affiliate[]
   orders          Order[]
   carts           Cart[]
-  status          Status @default(Active)
+  status          Status @default(Inactive)
   created_at       DateTime  @default(now()) @db.Timestamp
   updated_at       DateTime  @updatedAt @db.Timestamp
   @@map("users")

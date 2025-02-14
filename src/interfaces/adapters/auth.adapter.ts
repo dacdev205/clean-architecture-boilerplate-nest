@@ -5,8 +5,10 @@ import {
 import { SignInCustomerUseCase } from '~/application/auth/use-case/sign-in-customer.use-case';
 import { SignUpCustomerUseCase } from '~/application/auth/use-case/sign-up-customer.use-case';
 import { Injectable } from '@nestjs/common';
-import { SignInCustomerUseCaseDto } from './../../application/auth/dtos/sign-in-customer.dto';
-import { UserProfileResponseDto } from '../dtos/user-profile.dto';
+import {
+  SignInCustomerUseCaseDto,
+  SignInCustomerUseCaseResultDto,
+} from './../../application/auth/dtos/sign-in-customer.dto';
 
 @Injectable()
 export class AuthAdapter {
@@ -20,8 +22,8 @@ export class AuthAdapter {
     return this._signUpCustomerUseCase.execute(data);
   }
   async signIn(
-    data: UserProfileResponseDto,
-  ): Promise<SignUpCustomerUseCaseResultDto> {
+    data: SignInCustomerUseCaseDto,
+  ): Promise<SignInCustomerUseCaseResultDto> {
     return this._signInCustomerUseCase.execute(data);
   }
 }

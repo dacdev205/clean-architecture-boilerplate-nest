@@ -11,7 +11,7 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.schema';
-import { CreateUserUseCase } from '~/application/customer/use-case/create-user.use-case';
+import { CreateUserUseCase } from '~/application/user/use-case/create-user.use-case';
 import {
   CreateUserRequestDto,
   CreateUserRequestSchema,
@@ -19,11 +19,16 @@ import {
 } from 'src/interfaces/dtos/create-user.dto';
 import { JwtCustomerGuard } from '../guardians/guard/jwt-customer.guard';
 import { CurrentUser } from '~/common/decorators/req-user.decorators';
-import { UserProfileResponseDto } from 'src/interfaces/dtos/user-profile.dto';
+import { UserProfileResponseDto } from '~/application/auth/dtos/user-profile.dto';
+import { UserAdapter } from 'src/interfaces/adapters/user.adapter';
+import {
+  EmailRequestDto,
+  EmailRequestSchema,
+} from 'src/interfaces/dtos/email.edto';
 
 @Controller('users')
 export class UsersController {
-  constructor(private readonly _createUserUseCase: CreateUserUseCase) {}
+  constructor(private readonly _userAdapter: UserAdapter) {}
 
   @Post('')
   @UsePipes(new ZodValidationPipe(CreateUserRequestSchema))
@@ -31,7 +36,7 @@ export class UsersController {
     @Body()
     data: CreateUserRequestDto,
   ): Promise<CreateUserResponseDto> {
-    return await this._createUserUseCase.execute(data);
+    return await this._userAdapter.create(data);
   }
   @Get('me')
   @UseGuards(JwtCustomerGuard)
@@ -40,6 +45,13 @@ export class UsersController {
   ): UserProfileResponseDto {
     return user as UserProfileResponseDto;
   }
+  @Get('get-started')
+  async getStarted(
+    @Body(new ZodValidationPipe(EmailRequestSchema)) data: EmailRequestDto,
+  ): Promise<boolean> {
+    return await this._userAdapter.getStarted(data.email);
+  }
+  //
   // @Delete(':id')
   // async delete(@Param('id') id: string): Promise<User> {
   //   const user = await this._deleteUserUseCase.execute(id);

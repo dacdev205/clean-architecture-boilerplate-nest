@@ -1,3 +1,1 @@
-// import { UsersController } from './users.controller';
-
-// export { UsersController };
+export * from './users.controller';

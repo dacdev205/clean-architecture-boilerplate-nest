@@ -26,7 +26,7 @@ export class QueuesModule extends ConfigurableModuleClass {
         }),
       ],
       providers: [QueuesService],
-      exports: [QueuesService],
+      exports: [QueuesService, BullModule],
     };
   }
 }

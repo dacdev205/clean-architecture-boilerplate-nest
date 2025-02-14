@@ -1,5 +1,4 @@
 import { Strategy } from 'passport-local';
-import { UserProfileResponseDto } from 'src/interfaces/dtos/user-profile.dto';
 import { ValidateCustomerLoginUseCase } from '~/application/auth/use-case/validate-customer-login.use-case';
 import { STRATEGY } from '~/common/constants/strategy.constants';
 import { Injectable, UnauthorizedException } from '@nestjs/common';
@@ -19,10 +18,7 @@ export class LocalCustomerStrategy extends PassportStrategy(
     });
   }
 
-  async validate(
-    email: string,
-    password: string,
-  ): Promise<UserProfileResponseDto> {
+  async validate(email: string, password: string): Promise<any> {
     const user = await this._validateCustomerLoginUseCase.execute(
       email,
       password,
@@ -30,6 +26,6 @@ export class LocalCustomerStrategy extends PassportStrategy(
     if (!user) {
       throw new UnauthorizedException();
     }
-    return user as UserProfileResponseDto;
+    return user;
   }
 }

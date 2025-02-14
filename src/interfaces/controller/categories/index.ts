@@ -1,3 +1,1 @@
-import { CategoriesController } from './categories.controller';
-
-export { CategoriesController };
+export * from './categories.controller';

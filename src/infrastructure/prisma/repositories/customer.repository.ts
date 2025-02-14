@@ -27,4 +27,8 @@ export class PrismaCustomerRepository implements UserRepository {
       },
     });
   }
+  async checkEmail(args: Prisma.UserFindUniqueArgs): Promise<boolean> {
+    const user = await this._prisma.user.findUnique(args);
+    return !!user;
+  }
 }

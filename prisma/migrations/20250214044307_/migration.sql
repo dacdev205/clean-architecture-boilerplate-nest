@@ -14,7 +14,7 @@ CREATE TYPE "ShippingType" AS ENUM ('METHOD_1', 'METHOD_2');
 CREATE TYPE "Role" AS ENUM ('Admin', 'Affiliate', 'Customer');
 
 -- CreateEnum
-CREATE TYPE "Status" AS ENUM ('Active', 'Blocked');
+CREATE TYPE "Status" AS ENUM ('Active', 'Blocked', 'Inactive');
 
 -- CreateTable
 CREATE TABLE "addresses" (
@@ -170,7 +170,7 @@ CREATE TABLE "users" (
     "two_FA_enabled" BOOLEAN NOT NULL DEFAULT false,
     "code_id" VARCHAR(255),
     "code_exprired_at" TIMESTAMP,
-    "status" "Status" NOT NULL DEFAULT 'Active',
+    "status" "Status" NOT NULL DEFAULT 'Inactive',
     "created_at" TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated_at" TIMESTAMP NOT NULL,
 

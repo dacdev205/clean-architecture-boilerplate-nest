@@ -14,39 +14,43 @@ import {
   UseGuards,
   UsePipes,
 } from '@nestjs/common';
-import { User } from '@prisma/client';
 import { JwtAdminGuard } from '../guardians/guard/jwt-admin.guard';
 import { JwtCustomerGuard } from '../guardians/guard/jwt-customer.guard';
 import { LocalAdminGuard } from '../guardians/guard/local-admin.guard';
-import { CustomerAdapter } from 'src/interfaces/adapters/customer.adapter';
+import { UserAdapter } from 'src/interfaces/adapters/user.adapter';
 import { ZodValidationPipe } from '~/common/pipes/zod-validation.schema';
 import { AuthAdapter } from 'src/interfaces/adapters/auth.adapter';
 import { LocalCustomerGuard } from '../guardians/guard/local-customer.guard';
-import { UserProfileResponseDto } from 'src/interfaces/dtos/user-profile.dto';
-import { SignInCustomerResponseDto } from 'src/interfaces/dtos/sign-in-customer.dto';
+import { UserProfileResponseDto } from '~/application/auth/dtos/user-profile.dto';
+import {
+  SignInCustomerRequestDto,
+  SignInCustomerRequestSchema,
+  SignInCustomerResponseDto,
+} from 'src/interfaces/dtos/sign-in-customer.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly _authAdapter: AuthAdapter) {}
-
   @UseGuards(LocalCustomerGuard)
   @Post('customer/login')
   async login(
-    @CurrentUser() user: UserProfileResponseDto,
+    @CurrentUser() data: SignInCustomerRequestDto,
   ): Promise<SignInCustomerResponseDto> {
-    return await this._authAdapter.signIn(user);
+    return await this._authAdapter.signIn(data);
   }
+  //
   // @UseGuards(LocalAdminGuard)
   // @Post('login-admin')
   // async loginAdmin(@CurrentUser() user: UserProfile): Promise<AuthResponse> {
   //   return await this._signInAdminUseCase.execute(user);
   // }
   @Post('customer/register')
-  @UsePipes(new ZodValidationPipe(SignUpCustomerRequestSchema))
   async register(
-    @Body() data: SignUpCustomerRequestDto,
+    @Body(new ZodValidationPipe(SignUpCustomerRequestSchema))
+    data: SignUpCustomerRequestDto,
   ): Promise<SignUpCustomerResponseDto> {
     return await this._authAdapter.signUp(data);
   }
+  //
   // @Post('register-admin')
   // @UsePipes(new ZodValidationPipe(SignUpSchema))
   // async registerAdmin(@Body() signUpDto: SignUpDto): Promise<AuthResponse> {
@@ -62,10 +66,7 @@ export class AuthController {
   // async unblockUser(@Body('email') email: string): Promise<void> {
   //   return await this._unblockUserUseCase.execute(email);
   // }
-  // @Get('get-started')
-  // async getStarted(@Body('email') email: string): Promise<any> {
-  //   return await this._getStartedUseCase.execute(email);
-  // }
+
   // @UseGuards(JwtCustomerGuard)
   // @Put('change-password')
   // @UsePipes(new ZodValidationPipe(ChangePasswordSchema))

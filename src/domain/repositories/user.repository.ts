@@ -3,6 +3,7 @@ import { User } from '../types/user.type';
 export interface UserRepository {
   // findFirst(args: Prisma.AddressFindFirstArgs): Promise<User | null>;
   findOne(args: Prisma.UserFindUniqueArgs): Promise<User | null>;
+  checkEmail(args: Prisma.UserFindUniqueArgs): Promise<boolean>;
   // findMany(args: Prisma.UserFindManyArgs): Promise<User[]>;
   create(args: Prisma.UserCreateArgs): Promise<User>;
   // update(args: Prisma.UserUpdateArgs): Promise<User>;
