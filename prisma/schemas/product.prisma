@@ -3,15 +3,18 @@ model Product {
   name        String  @db.VarChar(255)
   price       Decimal @db.Decimal(10, 2)
   quantity    Int 
-  discount    Decimal @db.Decimal(10, 2)
-  orderItems  OrderItem[]
-  createdAt   DateTime @default(now())  @db.Timestamp
-  updatedAt   DateTime @updatedAt @db.Timestamp
-  deletedAt   DateTime? @db.Timestamp
+  slug        String  @unique @db.VarChar(255)
+  discount    Decimal? @db.Decimal(10, 2)
+  url_source  String @db.VarChar(255)
+  images      String[] @db.VarChar(255)
+  order_items  OrderItem[]
+  deleted_at   DateTime? @map("delete_at") @db.Timestamp
+  created_at   DateTime @default(now()) @db.Timestamp
+  updated_at   DateTime? @updatedAt @db.Timestamp
   
-  categoryId  String @map("category_id")  @db.VarChar(36)
+  category_id  String @map("category_id")  @db.VarChar(36)
   
-  category    Category @relation(fields: [categoryId], references: [id])
+  category    Category @relation(fields: [category_id], references: [id])
 
   @@map("products")
 }

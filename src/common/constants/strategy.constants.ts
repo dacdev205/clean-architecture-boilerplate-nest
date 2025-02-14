@@ -1,4 +1,6 @@
 export const STRATEGY = {
-  LOCAL: 'local',
-  JWT: 'jwt',
+  LOCAL_CUSTOMER: 'local',
+  JWT_CUSTOMER: 'jwt',
+  JWT_ADMIN: 'jwt_admin',
+  LOCAL_ADMIN: 'local_admin',
 };

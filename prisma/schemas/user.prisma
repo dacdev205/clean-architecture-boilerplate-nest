@@ -3,17 +3,19 @@ model User {
   role            Role     @default(Customer)
   email           String    @unique
   password        String   @db.VarChar(255)
-  firstName       String   @db.VarChar(255)
-  lastName        String  @db.VarChar(255)
+  first_name       String   @db.VarChar(255)
+  last_name        String  @db.VarChar(255)
   phone           String  @db.VarChar(255)
-  twoFAEnabled    Boolean @default(false)
+  two_FA_enabled    Boolean @default(false)
+  code_id      String?   @map("code_id") @db.VarChar(255)
+  code_expiredAt DateTime? @map("code_exprired_at") @db.Timestamp
   addresses       Address[]
   affiliates      Affiliate[]
   orders          Order[]
   carts           Cart[]
   status          Status @default(Active)
-  createdAt       DateTime  @default(now()) @db.Timestamp
-  updatedAt       DateTime  @updatedAt @db.Timestamp
+  created_at       DateTime  @default(now()) @db.Timestamp
+  updated_at       DateTime  @updatedAt @db.Timestamp
   @@map("users")
 }
 
@@ -25,4 +27,5 @@ enum Role {
 enum Status {
   Active
   Blocked
+  Inactive
 }

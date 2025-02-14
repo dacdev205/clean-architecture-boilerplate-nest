@@ -1,7 +1,6 @@
 import { ProductSeedData } from './seeds/product.seed';
-
-const seeds = async () => {
+async function seed() {
   const ProductSeed = new ProductSeedData();
   await ProductSeed.main();
-};
-seeds();
+}
+seed();

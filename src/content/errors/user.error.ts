@@ -17,3 +17,8 @@ export const AUTH_FAILED_LOGIN = {
   code: 'account_is_not_active',
   message: 'Account is not active',
 };
+
+export const USER_BLOCKED = {
+  code: 'user_blocked',
+  message: 'User is blocked',
+};

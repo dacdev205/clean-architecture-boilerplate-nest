@@ -2,23 +2,25 @@ model Order {
   id              String    @id @default(uuid()) @db.VarChar(36)
   orderCode       String   @unique @db.VarChar(36)
   status          OrderStatus  @default(New)
-  paymentStatus   PaymentStatus @default(Pending) 
-  totalAmount     Decimal @db.Decimal(10, 2)
-  orderItems      OrderItem[]
-  createdAt       DateTime @default(now()) @db.Timestamp
-  updatedAt       DateTime @updatedAt @db.Timestamp
-  commissionAmount Float?    @default(0) 
-  userId          String    @map("user_id") @db.VarChar(36)
-  affiliateId     String?   @map("affiliate_id") @db.VarChar(36)
-  addressId       String    @map("address_id") @db.VarChar(36)
-  shippingMethodId String   @map("shipping_method_id")
-  paymentMethodId String    @map("payment_method_id") @db.VarChar(36)
+  payment_status   PaymentStatus @default(Pending) 
+  total_amount     Decimal @db.Decimal(10, 2)
+  order_items      OrderItem[]
+  commission_amount Float?    @default(0) 
+  deleted_at   DateTime? @map("delete_at") @db.Timestamp
+  created_at   DateTime @default(now()) @db.Timestamp
+  updated_at   DateTime? @updatedAt @db.Timestamp
+
+  user_id          String    @map("user_id") @db.VarChar(36)
+  affiliate_id     String?   @map("affiliate_id") @db.VarChar(36)
+  address_id       String    @map("address_id") @db.VarChar(36)
+  shipping_method_id String   @map("shipping_method_id")
+  payment_method_id String    @map("payment_method_id") @db.VarChar(36)
   
-  user            User      @relation(fields: [userId], references: [id])
-  affiliate       Affiliate? @relation(fields: [affiliateId], references: [id])
-  address         Address   @relation(fields: [addressId], references: [id])
-  shippingMethod  ShippingMethod @relation(fields: [shippingMethodId], references: [id])
-  paymentMethod   PaymentMethod @relation(fields: [paymentMethodId], references: [id])
+  user            User      @relation(fields: [user_id], references: [id])
+  affiliate       Affiliate? @relation(fields: [affiliate_id], references: [id])
+  address         Address   @relation(fields: [address_id], references: [id])
+  shipping_method  ShippingMethod @relation(fields: [shipping_method_id], references: [id])
+  payment_method   PaymentMethod @relation(fields: [payment_method_id], references: [id])
 
   @@map("orders")
 }

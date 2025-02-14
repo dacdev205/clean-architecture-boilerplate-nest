@@ -12,10 +12,9 @@ interface CreateCategoryInput {
 interface Raw_Data {
   name: string | null;
   url_source: string | null;
-  price?: number;
-  slug: string | null;
+  price?: string | number;
   images: string[] | null;
-  quanlity: number | 0;
+  quantity: number | 0;
 }
 
 export class ProductSeedData {
@@ -43,8 +42,10 @@ export class ProductSeedData {
     categoryInputs: Array<CreateCategoryInput>,
   ): Promise<Array<Category>> {
     const categoriesData = categoryInputs.map((categoryInput) => {
+      const slug = this.generateSlug(categoryInput.name);
       return {
         name: categoryInput.name,
+        slug,
       };
     });
 
@@ -68,9 +69,25 @@ export class ProductSeedData {
 
     return categories;
   }
-
+  async createProduct(
+    productData: Array<Prisma.ProductCreateInput>,
+  ): Promise<void> {
+    for (let i = 0; i < productData.length; i++) {
+      const product = productData[i];
+      const existedProduct = await this._prismaClient.product.findFirst({
+        where: { name: product.name, slug: product.slug },
+      });
+      if (existedProduct) {
+        console.log('Skipping existing Product: ', product.name);
+        continue;
+      }
+      await this._prismaClient.product.create({
+        data: product,
+      });
+    }
+  }
   async main() {
-    const dirName = 'product-raw-data';
+    const dirName = './data/product-raw-data';
     const seedFileNames = this.readFilesFromDir(dirName);
 
     if (seedFileNames.length === 0) {
@@ -82,6 +99,36 @@ export class ProductSeedData {
     }));
 
     const categories = await this.createCategories(categoryInputs);
-    console.log(categories);
+    for (const category of categories) {
+      const filePath = resolve(__dirname, dirName, `${category.name}.json`);
+      const productData = this.readFilesContent(filePath);
+
+      const requiredStringFields = ['name', 'url_source'];
+
+      const cleanedProductData: Array<Prisma.ProductCreateInput> = [];
+      for (const product of productData) {
+        const missReiredFields = requiredStringFields.some(
+          (field) => !product[field],
+        );
+        if (missReiredFields) {
+          console.log('Skipping Product dont have required field');
+          continue;
+        }
+        cleanedProductData.push({
+          name: product.name as string,
+          url_source: product.url_source as string,
+          price: parseFloat(product.price?.toString() ?? '0'),
+          slug: this.generateSlug(product.name as string),
+          quantity: product.quantity,
+          images: product.images as string[],
+          category: {
+            connect: {
+              id: category.id,
+            },
+          },
+        });
+        await this.createProduct(cleanedProductData);
+      }
+    }
   }
 }

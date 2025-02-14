@@ -1,10 +1,12 @@
 model Category {
   id          String    @id @default(uuid()) @db.VarChar(36)
   name        String   @db.VarChar(255)
+  slug        String   @unique @db.VarChar(255)
+  deleted_at   DateTime? @map("delete_at") @db.Timestamp
+  created_at   DateTime @default(now()) @db.Timestamp
+  updated_at   DateTime? @updatedAt @db.Timestamp
+  
   products    Product[] 
-  createdAt   DateTime  @default(now()) @db.Timestamp
-  updatedAt   DateTime  @db.Timestamp
-  deletedAt   DateTime?  @db.Timestamp
 
   @@map("categories") 
 }

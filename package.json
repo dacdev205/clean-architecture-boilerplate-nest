@@ -19,7 +19,7 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "prisma:merge": "npx prisma-merge -b ./prisma/base.prisma -s ./prisma/schemas/*.prisma -o ./prisma/schema.prisma",
+    "prisma:merge": "npx prisma-merge -b ./prisma/base.prisma -s ./prisma/**/*.prisma -e ./prisma/base.prisma -o ./prisma/schema.prisma",
     "prisma:format": "npx prisma format",
     "prisma:dev": "dotenv -e .env.development.local -- npx prisma migrate dev",
     "prisma:local": "dotenv -e .env.local -- npx prisma migrate dev",
