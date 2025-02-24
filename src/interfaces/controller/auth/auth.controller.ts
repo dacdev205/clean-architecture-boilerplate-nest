@@ -1,40 +1,32 @@
 import {
-  SignUpCustomerResponseSchema,
-  SignUpCustomerRequestSchema,
-  SignUpCustomerRequestDto,
-  SignUpCustomerResponseDto,
+  CustomerSignUpResponseSchema,
+  CustomerSignUpRequestSchema,
+  CustomerSignUpRequestDto,
+  CustomerSignUpResponseDto,
 } from '../../dtos/sign-up-customer.dto';
 import { CurrentUser } from 'src/common/decorators/req-user.decorators';
-import {
-  Body,
-  Controller,
-  Get,
-  Post,
-  Put,
-  UseGuards,
-  UsePipes,
-} from '@nestjs/common';
-import { JwtAdminGuard } from '../guardians/guard/jwt-admin.guard';
-import { JwtCustomerGuard } from '../guardians/guard/jwt-customer.guard';
-import { LocalAdminGuard } from '../guardians/guard/local-admin.guard';
-import { UserAdapter } from 'src/interfaces/adapters/user.adapter';
+import { Body, Controller, Post, UseGuards } from '@nestjs/common';
+
 import { ZodValidationPipe } from '~/common/pipes/zod-validation.schema';
 import { AuthAdapter } from 'src/interfaces/adapters/auth.adapter';
 import { LocalCustomerGuard } from '../guardians/guard/local-customer.guard';
-import { UserProfileResponseDto } from '~/application/auth/dtos/user-profile.dto';
 import {
-  SignInCustomerRequestDto,
-  SignInCustomerRequestSchema,
-  SignInCustomerResponseDto,
+  CustomerSignInRequestDto,
+  CustomerSignInRequestSchema,
+  CustomerSignInResponseDto,
 } from 'src/interfaces/dtos/sign-in-customer.dto';
+import {
+  EmailRequestDto,
+  EmailRequestSchema,
+} from '~/interfaces/dtos/email.dto';
 @Controller('auth')
 export class AuthController {
   constructor(private readonly _authAdapter: AuthAdapter) {}
   @UseGuards(LocalCustomerGuard)
   @Post('customer/login')
   async login(
-    @CurrentUser() data: SignInCustomerRequestDto,
-  ): Promise<SignInCustomerResponseDto> {
+    @CurrentUser() data: CustomerSignInRequestDto,
+  ): Promise<CustomerSignInResponseDto> {
     return await this._authAdapter.signIn(data);
   }
   //
@@ -45,10 +37,16 @@ export class AuthController {
   // }
   @Post('customer/register')
   async register(
-    @Body(new ZodValidationPipe(SignUpCustomerRequestSchema))
-    data: SignUpCustomerRequestDto,
-  ): Promise<SignUpCustomerResponseDto> {
+    @Body(new ZodValidationPipe(CustomerSignUpRequestSchema))
+    data: CustomerSignUpRequestDto,
+  ): Promise<CustomerSignUpResponseDto> {
     return await this._authAdapter.signUp(data);
+  }
+  @Post('send-sercet-code')
+  async sendCode(
+    @Body(new ZodValidationPipe(EmailRequestSchema)) data: EmailRequestDto,
+  ): Promise<any> {
+    return await this._authAdapter.sendCode(data.email);
   }
   //
   // @Post('register-admin')

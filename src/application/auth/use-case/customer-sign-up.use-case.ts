@@ -5,18 +5,18 @@ import { CreateUserUseCase } from '~/application/user/use-case/create-user.use-c
 import { GetUserByEmailUseCase } from '~/application/user/use-case/get-user-by-email.use-case';
 import { HashService } from '~/application/utils/hash.service';
 import { JWT_TOKEN } from '~/common/constants/jwt.constants';
-import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
+import { SendSecretCodeJobData } from '~/common/interfaces/activation-job-data.interface';
 import { EMAIL_ALREADY_EXIST } from '~/content/errors/user.error';
 import { ConflictException, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import {
-  SignUpCustomerUseCaseDto,
-  SignUpCustomerUseCaseResultDto,
-} from '../dtos/sign-up-customer.dto';
+  CustomerSignUpUseCaseDto,
+  CustomerSignUpUseCaseResultDto,
+} from '../dtos/customer-sign-up.dto';
 
 @Injectable()
-export class SignUpCustomerUseCase {
+export class CustomerSignUpUseCase {
   constructor(
     private readonly _hashService: HashService,
     private readonly _createUserUseCase: CreateUserUseCase,
@@ -26,8 +26,8 @@ export class SignUpCustomerUseCase {
     private _authQueue: AuthQueue,
   ) {}
   async execute(
-    data: SignUpCustomerUseCaseDto,
-  ): Promise<SignUpCustomerUseCaseResultDto> {
+    data: CustomerSignUpUseCaseDto,
+  ): Promise<CustomerSignUpUseCaseResultDto> {
     const { email, password, first_name, last_name, phone } = data;
     const existedEmail = await this._getUserByEmailUseCase.execute(email);
     if (existedEmail) {
@@ -40,15 +40,16 @@ export class SignUpCustomerUseCase {
       first_name,
       last_name,
       code_id: uuidv4(),
-      code_expiredAt: dayjs().add(1, 'day').toDate(),
+      code_expiredAt: dayjs().add(5, 'minutes').toDate(),
       phone,
     };
     const user = await this._createUserUseCase.execute(userData);
-    const activationJobData: ActivationJobData = {
+    const secretCodeJobData: SendSecretCodeJobData = {
       to: email,
-      activationCode: userData.code_id as string,
+      secretCode: userData.code_id as string,
+      codeExpried: userData.code_expiredAt,
     };
-    await this._authQueue.addSendActiveCodeJob(activationJobData);
+    await this._authQueue.sendSecretCodeJob(secretCodeJobData);
     const payload = {
       sub: user.id,
       username: user.last_name,

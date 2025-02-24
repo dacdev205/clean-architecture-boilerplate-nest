@@ -1,25 +1,24 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
-import { JOB_NAMES, QUEUE_NAMES } from '~/common/constants/queue.constants';
-import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
-import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
+import { QUEUE_NAMES } from './constants/queue.constants';
 
 @Injectable()
 export class QueuesService {
+  private readonly _queueMap = new Map<string, Queue>();
   constructor(
     @InjectQueue(QUEUE_NAMES.AUTH_QUEUE) private readonly _authQueue: Queue,
-  ) {}
-  async addSendActiveCodeJob(activationJobData: ActivationJobData) {
-    await this._authQueue.add(
-      JOB_NAMES.SEND_ACTIVATION_MAIL,
-      activationJobData,
-    );
+  ) {
+    this._queueMap = new Map<string, Queue>([
+      [QUEUE_NAMES.AUTH_QUEUE, this._authQueue],
+    ]);
   }
-  async addSendResetPassCodeJob(resetPassJobData: ResetPassJobData) {
-    await this._authQueue.add(
-      JOB_NAMES.SEND_RESET_PASSWORD_MAIL,
-      resetPassJobData,
-    );
+  async getReadyQueue(queueName: string): Promise<Queue | undefined> {
+    const queue = this._queueMap.get(queueName);
+    if (!queue) {
+      throw new Error(`Queue "${queueName}" not found.`);
+    }
+    await queue.waitUntilReady();
+    return queue;
   }
 }

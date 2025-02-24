@@ -3,7 +3,8 @@ import {
   USER_REPOSITORY,
   UserRepository,
 } from 'src/domain/repositories/user.repository';
-import { User } from 'src/domain/types/user.type';
+import { GetUserUseCaseResultDto } from '../dtos/get-user-by-id.dto';
+import { USER_NOT_FOUND } from '~/content/errors/user.error';
 
 @Injectable()
 export class GetUserByEmailUseCase {
@@ -11,7 +12,7 @@ export class GetUserByEmailUseCase {
     @Inject(USER_REPOSITORY)
     public readonly _userRepository: UserRepository,
   ) {}
-  async execute(email: string): Promise<User | null> {
+  async execute(email: string): Promise<GetUserUseCaseResultDto | null> {
     return await this._userRepository.findOne({ where: { email } });
   }
 }

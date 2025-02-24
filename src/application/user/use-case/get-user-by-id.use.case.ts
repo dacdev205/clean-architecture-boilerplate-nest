@@ -12,11 +12,7 @@ export class GetUserByIdUseCase {
     @Inject(USER_REPOSITORY)
     public readonly _userRepository: UserRepository,
   ) {}
-  async execute(id: string): Promise<GetUserUseCaseResultDto> {
-    const user = await this._userRepository.findOne({ where: { id } });
-    if (!user) {
-      throw new NotFoundException(USER_NOT_FOUND);
-    }
-    return user;
+  async execute(id: string): Promise<GetUserUseCaseResultDto | null> {
+    return await this._userRepository.findOne({ where: { id } });
   }
 }

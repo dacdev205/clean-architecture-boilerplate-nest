@@ -1,5 +1,5 @@
 import * as nodemailer from 'nodemailer';
-import { ActivationJobData } from '~/common/interfaces/activation-job-data.interface';
+import { SendSecretCodeJobData } from '~/common/interfaces/activation-job-data.interface';
 import { EmailJobData } from '~/common/interfaces/email-job-data.interface';
 import { ResetPassJobData } from '~/common/interfaces/reset-pass-job-data.interface';
 import { EmailContent } from 'src/content/email';
@@ -7,13 +7,18 @@ import { Inject, Injectable } from '@nestjs/common';
 import { HandlebarsService } from './../handlebar/handlebar.service';
 import { EmailModuleOption } from '~/common/interfaces/email.interfaces';
 import { MAIL_SERVICE } from '~/common/constants/email.constants';
+import * as fs from 'fs';
+import * as handlebars from 'handlebars';
 
+import path, { resolve } from 'path';
+import { GenerateTokenService } from '~/application/utils/gen-token.service';
 @Injectable()
 export class EmailService {
   private transporter: nodemailer.Transporter;
   constructor(
     @Inject('EMAIL_OPTIONS') private readonly options: EmailModuleOption,
-    private readonly handlebarsService: HandlebarsService,
+    private readonly _handlebarsService: HandlebarsService,
+    private readonly _generateTokenService: GenerateTokenService,
   ) {
     this.transporter = nodemailer.createTransport({
       host: this.options.smtpHost,
@@ -26,36 +31,58 @@ export class EmailService {
     });
   }
 
-  async sendResetPassEmail(resetPassJobData: ResetPassJobData): Promise<void> {
-    const { to, resetCode } = resetPassJobData;
-    const templateContent = await this.handlebarsService.compileTemplate(
-      EmailContent.sendResetPassCode.content,
-      { resetCode },
-    );
-    const emailJobData: EmailJobData = {
-      to: to,
-      subject: EmailContent.sendResetPassCode.subject,
-      html: templateContent,
-    };
-    if (this.options.service === MAIL_SERVICE.SMTP) {
-      await this.transporter.sendMail({
-        from: process.env.SMTP_USER,
-        to: emailJobData.to,
-        subject: emailJobData.subject,
-        html: emailJobData.html,
-      });
-    } else if (this.options.service === MAIL_SERVICE.SEND_GRID) {
-      console.log(MAIL_SERVICE.LOG_WITH_SEND_GRID);
-    }
-  }
+  // async sendResetPassEmail(
+  //   sendSecretCodeJobData: SendSecretCodeJobData,
+  // ): Promise<void> {
+  //   const { to, secretCode, codeExpried } = sendSecretCodeJobData;
+  //   const token = await this._generateTokenService.generateToken(
+  //     to,
+  //     secretCode,
+  //     codeExpried,
+  //   );
+  //   const resetPasswordLink = `${process.env.CLIENT_URL}/customer/active-account?token=${token}`;
+  //   const test = await this._handlebarsService.compileTemplate(
+  //     'customer-activate-account',
+  //     secretCode,
+  //   );
+  //   console.log(test);
+
+  //   // const templateContent = await this.handlebarsService.compileTemplate(
+  //   //   EmailContent.sendResetPassCode.content,
+  //   //   { resetPasswordLink },
+  //   // );
+
+  //   // const emailJobData: EmailJobData = {
+  //   //   to: to,
+  //   //   subject: EmailContent.sendResetPassCode.subject,
+  //   //   html: templateContent,
+  //   // };
+  //   // if (this.options.service === MAIL_SERVICE.SMTP) {
+  //   //   await this.transporter.sendMail({
+  //   //     from: process.env.SMTP_USER,
+  //   //     to: emailJobData.to,
+  //   //     subject: emailJobData.subject,
+  //   //     html: emailJobData.html,
+  //   //   });
+  //   // } else if (this.options.service === MAIL_SERVICE.SEND_GRID) {
+  //   //   console.log(MAIL_SERVICE.LOG_WITH_SEND_GRID);
+  //   // }
+  // }
   async sendActivationEmail(
-    activationJobData: ActivationJobData,
+    sendSecretCodeJobData: SendSecretCodeJobData,
   ): Promise<void> {
-    const { to, activationCode } = activationJobData;
-    const templateContent = await this.handlebarsService.compileTemplate(
-      EmailContent.sendActivationCode.content,
-      { activationCode },
+    const { to, secretCode, codeExpried } = sendSecretCodeJobData;
+    const token = await this._generateTokenService.generateToken(
+      to,
+      secretCode,
+      codeExpried,
     );
+    const activationLink = `${process.env.CLIENT_URL}/customer/active-account?token=${token}`;
+    const templateContent = await this._handlebarsService.compileTemplate(
+      'customer-activate-account',
+      activationLink,
+    );
+
     const emailJobData: EmailJobData = {
       to: to,
       subject: EmailContent.sendActivationCode.subject,

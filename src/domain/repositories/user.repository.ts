@@ -6,7 +6,8 @@ export interface UserRepository {
   checkEmail(args: Prisma.UserFindUniqueArgs): Promise<boolean>;
   // findMany(args: Prisma.UserFindManyArgs): Promise<User[]>;
   create(args: Prisma.UserCreateArgs): Promise<User>;
-  // update(args: Prisma.UserUpdateArgs): Promise<User>;
+  update(args: Prisma.UserUpdateArgs): Promise<Partial<User>>;
+
   // delete(args: Prisma.UserDeleteArgs): Promise<User>;
 }
 

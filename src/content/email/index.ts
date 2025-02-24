@@ -65,9 +65,9 @@ export const EmailContent = {
             <div class="header">Activate Your Account</div>
             <div class="content">
                 Hello <strong>{{name}}</strong>,<br><br>
-                Thank you for registering with us. Please use the activation code below to complete your registration process.
+                Thank you for registering with us. Please click the activation link to complete your registration process.
             </div>
-            <div class="activation-code">{{activationCode}}</div>
+            <div class="activation-code">{{activationLink}}</div>
             <br>
             <div class="footer">
                 If you did not request this registration, please ignore this email.<br>
@@ -145,7 +145,7 @@ export const EmailContent = {
             <div class="content">
                 You have requested to reset your password. Please use the reset code below to proceed.
             </div>
-            <div class="reset-code">{{resetCode}}</div>
+            <div class="reset-code">{{resetPasswordLink}}</div>
             <br>
             <div class="footer">
                 If you did not request a password reset, please ignore this email.<br>

@@ -1,29 +1,34 @@
 import {
-  SignUpCustomerUseCaseDto,
-  SignUpCustomerUseCaseResultDto,
-} from '~/application/auth/dtos/sign-up-customer.dto';
-import { SignInCustomerUseCase } from '~/application/auth/use-case/sign-in-customer.use-case';
-import { SignUpCustomerUseCase } from '~/application/auth/use-case/sign-up-customer.use-case';
+  CustomerSignUpUseCaseDto,
+  CustomerSignUpUseCaseResultDto,
+} from '~/application/auth/dtos/customer-sign-up.dto';
+import { CustomerSignInUseCase } from '~/application/auth/use-case/customer-sign-in.use-case';
+import { CustomerSignUpUseCase } from '~/application/auth/use-case/customer-sign-up.use-case';
 import { Injectable } from '@nestjs/common';
+import { AdminSendScretCodeActiveAccountUseCase } from './../../application/auth/use-case/admin-send-secret-code.use-case';
 import {
-  SignInCustomerUseCaseDto,
-  SignInCustomerUseCaseResultDto,
-} from './../../application/auth/dtos/sign-in-customer.dto';
+  CustomerSignInUseCaseDto,
+  CustomerSignInUseCaseResultDto,
+} from '../../application/auth/dtos/customer-sign-in.dto';
 
 @Injectable()
 export class AuthAdapter {
   constructor(
-    private readonly _signUpCustomerUseCase: SignUpCustomerUseCase,
-    private readonly _signInCustomerUseCase: SignInCustomerUseCase,
+    private readonly _CustomerSignUpUseCase: CustomerSignUpUseCase,
+    private readonly _CustomerSignInUseCase: CustomerSignInUseCase,
+    private readonly _adminSendScretCodeActiveAccountUseCase: AdminSendScretCodeActiveAccountUseCase,
   ) {}
   async signUp(
-    data: SignUpCustomerUseCaseDto,
-  ): Promise<SignUpCustomerUseCaseResultDto> {
-    return this._signUpCustomerUseCase.execute(data);
+    data: CustomerSignUpUseCaseDto,
+  ): Promise<CustomerSignUpUseCaseResultDto> {
+    return this._CustomerSignUpUseCase.execute(data);
+  }
+  async sendCode(email: string): Promise<any> {
+    return this._adminSendScretCodeActiveAccountUseCase.execute(email);
   }
   async signIn(
-    data: SignInCustomerUseCaseDto,
-  ): Promise<SignInCustomerUseCaseResultDto> {
-    return this._signInCustomerUseCase.execute(data);
+    data: CustomerSignInUseCaseDto,
+  ): Promise<CustomerSignInUseCaseResultDto> {
+    return this._CustomerSignInUseCase.execute(data);
   }
 }

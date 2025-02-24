@@ -5,4 +5,4 @@ export interface CategoryRepository {
   findFirst(args: Prisma.CategoryFindFirstArgs): Promise<Category | null>;
   create(args: Prisma.CategoryCreateArgs): Promise<Category>;
 }
-export const CATEGORY_REPOSITPRY = Symbol('CATEGORY_REPOSITPRY');
+export const CATEGORY_REPOSITORY = Symbol('CATEGORY_REPOSITORY');

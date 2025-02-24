@@ -4,18 +4,18 @@ import { USER_NOT_FOUND } from '~/content/errors/user.error';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
-import { AuthResultDto } from '../dtos/auth-response.dto';
-import { SignInCustomerUseCaseDto } from '../dtos/sign-in-customer.dto';
+import { AuthResultDto } from '../../../interfaces/dtos/auth-response.dto';
+import { CustomerSignInUseCaseDto } from '../dtos/customer-sign-in.dto';
 
 @Injectable()
-export class SignInCustomerUseCase {
+export class CustomerSignInUseCase {
   constructor(
     private readonly _jwtService: JwtService,
     private readonly _configService: ConfigService,
     private readonly _getUserByEmailUseCase: GetUserByEmailUseCase,
   ) {}
 
-  async execute(data: SignInCustomerUseCaseDto): Promise<AuthResultDto> {
+  async execute(data: CustomerSignInUseCaseDto): Promise<AuthResultDto> {
     const user = await this._getUserByEmailUseCase.execute(data.email);
     if (!user) {
       throw new NotFoundException(USER_NOT_FOUND);

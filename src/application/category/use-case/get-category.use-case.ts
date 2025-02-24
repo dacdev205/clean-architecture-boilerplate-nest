@@ -1,6 +1,6 @@
 import { Inject, Injectable, NotFoundException } from '@nestjs/common';
 import {
-  CATEGORY_REPOSITPRY,
+  CATEGORY_REPOSITORY,
   CategoryRepository,
 } from 'src/domain/repositories/category.repository';
 import { Category } from 'src/domain/types/category.type';
@@ -10,7 +10,7 @@ import { CATEGORY_NOT_FOUND } from '~/content/errors/category.error';
 @Injectable()
 export class GetCategoryUseCase {
   constructor(
-    @Inject(CATEGORY_REPOSITPRY)
+    @Inject(CATEGORY_REPOSITORY)
     public readonly _categoryRepository: CategoryRepository,
   ) {}
   async execute(id: string): Promise<GetCategoryResultUseCaseDto> {

@@ -1,5 +1,5 @@
 import {
-  CATEGORY_REPOSITPRY,
+  CATEGORY_REPOSITORY,
   CategoryRepository,
 } from 'src/domain/repositories/category.repository';
 import { Inject, Injectable } from '@nestjs/common';
@@ -13,7 +13,7 @@ import {
 @Injectable()
 export class CreateCategoryUseCase {
   constructor(
-    @Inject(CATEGORY_REPOSITPRY)
+    @Inject(CATEGORY_REPOSITORY)
     public readonly _categoryRepository: CategoryRepository,
     private readonly _genSlugService: GenSlugService,
   ) {}

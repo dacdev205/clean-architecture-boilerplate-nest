@@ -4,6 +4,5 @@ export const QUEUE_NAMES = {
 };
 
 export const JOB_NAMES = {
-  SEND_ACTIVATION_MAIL: 'send-activation-email',
-  SEND_RESET_PASSWORD_MAIL: 'send-reset-password-email',
+  SEND_SECRET_CODE: 'send-secret-code',
 };

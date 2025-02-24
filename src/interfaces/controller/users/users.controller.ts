@@ -11,7 +11,6 @@ import {
   UsePipes,
 } from '@nestjs/common';
 import { ZodValidationPipe } from 'src/common/pipes/zod-validation.schema';
-import { CreateUserUseCase } from '~/application/user/use-case/create-user.use-case';
 import {
   CreateUserRequestDto,
   CreateUserRequestSchema,
@@ -24,16 +23,15 @@ import { UserAdapter } from 'src/interfaces/adapters/user.adapter';
 import {
   EmailRequestDto,
   EmailRequestSchema,
-} from 'src/interfaces/dtos/email.edto';
+} from 'src/interfaces/dtos/email.dto';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly _userAdapter: UserAdapter) {}
 
   @Post('')
-  @UsePipes(new ZodValidationPipe(CreateUserRequestSchema))
   async create(
-    @Body()
+    @Body(new ZodValidationPipe(CreateUserRequestSchema))
     data: CreateUserRequestDto,
   ): Promise<CreateUserResponseDto> {
     return await this._userAdapter.create(data);

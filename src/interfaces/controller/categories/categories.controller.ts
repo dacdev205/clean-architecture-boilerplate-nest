@@ -20,9 +20,9 @@ import {
 export class CategoriesController {
   constructor(private readonly _categoryAdapter: CategoryAdapter) {}
   @Post()
-  @UsePipes(new ZodValidationPipe(CreateCategoryRequestSchema))
   createCategory(
-    @Body() data: CreateCategoryRequestDto,
+    @Body(new ZodValidationPipe(CreateCategoryRequestSchema))
+    data: CreateCategoryRequestDto,
   ): Promise<CreateCategoryResponseDto> {
     return this._categoryAdapter.create(data);
   }

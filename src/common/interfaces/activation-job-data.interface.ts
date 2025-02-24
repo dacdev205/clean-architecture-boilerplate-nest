@@ -1,4 +1,5 @@
-export interface ActivationJobData {
+export interface SendSecretCodeJobData {
   to: string;
-  activationCode: string;
+  secretCode: string;
+  codeExpried: Date;
 }

@@ -1,20 +1,20 @@
 import { z } from 'zod';
 
-export const SignUpCustomerRequestSchema = z.object({
+export const CustomerSignUpRequestSchema = z.object({
   email: z.string().email(),
   password: z.string().min(8),
   first_name: z.string(),
   last_name: z.string(),
   phone: z.string(),
 });
-export type SignUpCustomerRequestDto = z.infer<
-  typeof SignUpCustomerRequestSchema
+export type CustomerSignUpRequestDto = z.infer<
+  typeof CustomerSignUpRequestSchema
 >;
 
-export const SignUpCustomerResponseSchema = z.object({
+export const CustomerSignUpResponseSchema = z.object({
   access_token: z.string(),
   refresh_token: z.string(),
 });
-export type SignUpCustomerResponseDto = z.infer<
-  typeof SignUpCustomerResponseSchema
+export type CustomerSignUpResponseDto = z.infer<
+  typeof CustomerSignUpResponseSchema
 >;

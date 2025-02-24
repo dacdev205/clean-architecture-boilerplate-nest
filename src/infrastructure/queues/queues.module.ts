@@ -1,4 +1,4 @@
-import { QUEUE_NAMES } from '~/common/constants/queue.constants';
+import { QUEUE_NAMES } from '~/infrastructure/queues/constants/queue.constants';
 import { ConfigurableModuleClass } from '~/infrastructure/queues/queue.module.definition';
 import { BullModule } from '@nestjs/bullmq';
 import { DynamicModule, Module } from '@nestjs/common';
